@@ -20,7 +20,14 @@ const DATA = {
     { nombre: 'Saturno', desc: 'Famoso por sus impresionantes anillos.', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Saturn_during_Equinox.jpg' },
     { nombre: 'Urano', desc: 'Gigante de hielo que rota de lado.', img: 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Uranus2.jpg' },
     { nombre: 'Neptuno', desc: 'El planeta más ventoso.', img: 'https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg' },
-    { nombre: 'Luna', desc: 'Nuestro satélite natural.', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg' }
+    { nombre: 'Luna', desc: 'Nuestro satélite natural.', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg' },
+    { nombre: 'Plutón', desc: 'Planeta enano del cinturón de Kuiper, 5 lunas.', img: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Pluto_in_true_color_-_post-New_Horizons.jpg' },
+    { nombre: 'Ceres', desc: 'Planeta enano en el cinturón de asteroides.', img: 'https://upload.wikimedia.org/wikipedia/commons/8/84/Ceres_-_RC3_-_Haulani_Crater_%2822381131663%29.jpg' },
+    { nombre: 'Cometa Halley', desc: 'El cometa más famoso, visible cada 76 años.', img: 'https://upload.wikimedia.org/wikipedia/commons/5/52/Halley%27s_Comet_-_March_8_1986.jpg' },
+    { nombre: 'Nebulosa de Orión', desc: 'Vivero estelar a 1,344 años luz.', img: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Orion_Nebula_-_Hubble_2006_mosaic.jpg' },
+    { nombre: 'Galaxia Andrómeda', desc: 'Nuestra galaxia vecina, a 2.5 millones de años luz.', img: 'https://upload.wikimedia.org/wikipedia/commons/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg' },
+    { nombre: 'Agujero Negro M87', desc: 'Primer agujero negro fotografiado (2019).', img: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Black_hole_-_Messier_87_crop_max_res.jpg' },
+    { nombre: 'Galaxia Remolino', desc: 'Galaxia espiral clásica a 23 millones de años luz.', img: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/Messier51_sRGB.jpg' }
   ],
 
   facts: [
