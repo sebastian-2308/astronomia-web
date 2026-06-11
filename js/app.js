@@ -2174,7 +2174,7 @@
     const playerDiv = overlay.querySelector('#youtube-player');
     const videoId = lec.video.split('/embed/')[1];
     const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
+    iframe.src = `https://www.youtube.com/embed/${videoId}?origin=${encodeURIComponent(window.location.origin)}`;
     iframe.style.width = '100%';
     iframe.style.height = '100%';
     iframe.style.border = 'none';
