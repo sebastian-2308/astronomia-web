@@ -103,26 +103,6 @@
   </div>
 
   <div class="card">
-    <h2>🪐 Sistema Solar 3D</h2>
-    <div class="iframe-fallback">
-      <iframe src="https://www.solarsystemscope.com/" sandbox="allow-scripts allow-same-origin allow-popups" style="width:100%;height:500px;border-radius:var(--radius);border:1px solid var(--border);background:#000;" loading="lazy" title="Solar System Scope"></iframe>
-      <div class="iframe-fallback-msg">🪐 Si el sistema solar 3D no carga, visítalo en <a href="https://www.solarsystemscope.com/" target="_blank">solarsystemscope.com</a></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🌍 Tierra en Vivo</h2>
-    <div class="earth-live-container">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Earth_Eastern_Hemisphere.jpg" alt="Tierra" loading="lazy">
-      <div class="earth-live-overlay">
-        <p style="font-size:1.1rem;margin-bottom:1rem;color:#fff;">🌍 Observa la Tierra desde la Estación Espacial Internacional</p>
-        <a href="https://www.youtube.com/watch?v=86YLFOog4GM" target="_blank" class="btn btn-primary" style="font-size:1rem;padding:0.8rem 2rem;">▶️ Ver Transmisión en Vivo</a>
-        <p style="margin-top:0.75rem;font-size:0.8rem;color:rgba(255,255,255,0.6);">La transmisión en vivo de la NASA muestra la Tierra vista desde la ISS.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
     <h2>🌙 Fase Lunar Actual</h2>
     <canvas id="moonCanvas" class="moon-canvas" width="220" height="220"></canvas>
     <div class="moon-info" id="moonInfo">Cargando...</div>
@@ -391,9 +371,21 @@
 <div id="tab9" class="tab-content">
   <div class="card">
     <h2>🎮 Asteroides: Edición Definitiva</h2>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">🕹️ Flechas = mover | <kbd>Espacio</kbd> = disparar | <kbd>P</kbd> = pausa</p>
     <div class="game-container">
-      <div class="canvas-container" style="width:100%;">
+      <div class="canvas-container" style="width:100%;position:relative;">
         <canvas id="gameCanvas" width="800" height="800"></canvas>
+        <div class="game-name-input" id="gameNameInput">
+          <h3>🏆 ¡Nuevo récord!</h3>
+          <p style="color:#fff;margin-bottom:0.5rem;">Puntuación: <strong id="finalScoreDisplay" style="color:var(--accent);">0</strong></p>
+          <input class="form-input" type="text" id="gamePlayerName" placeholder="Tu nombre" maxlength="20" style="text-align:center;">
+          <button class="btn btn-primary" id="submitGameScoreBtn">Guardar</button>
+        </div>
+        <div class="game-over-overlay" id="gameOverOverlay">
+          <h2>💥 GAME OVER</h2>
+          <p>Puntuación: <strong id="goScore">0</strong></p>
+          <p style="font-size:0.85rem;opacity:0.6;">Presiona "Reiniciar" para jugar de nuevo</p>
+        </div>
       </div>
       <div class="mobile-controls">
         <div class="arrow-controls" style="display:flex;gap:0.5rem;">
@@ -406,9 +398,8 @@
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;align-items:center;margin:0.75rem 0;">
         <button class="btn btn-success" id="startGameBtn">▶️ Iniciar Juego</button>
         <button class="btn btn-secondary" id="restartGameBtn" style="display:none;">🔄 Reiniciar</button>
+        <button class="btn btn-secondary" id="pauseGameBtn" style="display:none;">⏸️ Pausa</button>
         <button class="btn btn-secondary" id="fullscreenBtn">⛶ Pantalla Completa</button>
-        <span style="color:var(--text-secondary);font-size:0.9rem;">Puntaje: <strong id="gameScoreDisplay" style="color:var(--accent);">0</strong></span>
-        <span class="lives-display" style="font-size:1.3rem;">❤️❤️❤️</span>
       </div>
       <div style="margin-top:1rem;width:100%;">
         <h3>🏆 Ranking de Asteroides</h3>

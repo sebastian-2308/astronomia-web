@@ -486,33 +486,6 @@ footer {
 .iframe-fallback { position: relative; }
 .iframe-fallback-msg { text-align: center; padding: 0.5rem 1rem; color: var(--text-secondary); font-size: 0.8rem; background: var(--bg-card); border-radius: 0 0 var(--radius-sm) var(--radius-sm); border: 1px solid var(--border); border-top: none; margin-top: -5px; }
 
-.earth-live-container {
-  position: relative;
-  width: 100%;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: #000;
-}
-.earth-live-container img {
-  width: 100%;
-  height: auto;
-  display: block;
-  opacity: 0.8;
-}
-.earth-live-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(2px);
-}
-
 .canvas-container { background: #050a14; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
 
 canvas { max-width: 100%; height: auto; display: block; }
@@ -768,7 +741,36 @@ canvas { max-width: 100%; height: auto; display: block; }
 }
 
 .game-container { position: relative; display: flex; flex-direction: column; align-items: center; }
-#gameCanvas { background: #050a14; border-radius: var(--radius); border: 1px solid var(--border); width: 100%; max-width: 800px; aspect-ratio: 1/1; }
+#gameCanvas { background: #050a14; border-radius: var(--radius); border: 1px solid var(--border); width: 100%; max-width: 800px; aspect-ratio: 1/1; cursor: crosshair; }
+.game-hud {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 0.75rem 1rem; pointer-events: none;
+}
+.game-hud > div {
+  background: rgba(0,0,0,0.6); padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.85rem; color: #fff; pointer-events: auto;
+}
+.game-hud .level-badge { color: var(--accent); font-weight: 700; }
+.game-hud .score-badge strong { color: var(--accent); }
+.game-hud .lives-badge { font-size: 1.1rem; letter-spacing: 3px; }
+.game-name-input {
+  position: absolute; bottom: 50%; left: 50%; transform: translate(-50%, 50%);
+  background: rgba(0,0,0,0.85); padding: 1.5rem; border-radius: var(--radius);
+  border: 1px solid var(--accent); text-align: center; z-index: 10;
+  display: none; min-width: 280px;
+}
+.game-name-input h3 { color: var(--accent); margin-bottom: 0.75rem; font-size: 1.2rem; }
+.game-name-input input { margin-bottom: 0.5rem; }
+.game-over-overlay {
+  position: absolute; inset: 0; display: none;
+  align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7); z-index: 5;
+  flex-direction: column; gap: 0.5rem;
+}
+.game-over-overlay h2 { color: var(--danger); font-size: 2rem; }
+.game-over-overlay p { color: #fff; font-size: 1.1rem; }
 .mobile-controls { display: none; width: 100%; max-width: 500px; margin: 0.5rem auto; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
 .mobile-arrow { width: 64px; height: 64px; font-size: 1.8rem; border-radius: var(--radius); background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); touch-action: manipulation; }
 .shoot-btn { height: 64px; padding: 0 1.5rem; font-size: 1.2rem; background: var(--danger); color: white; border: none; border-radius: var(--radius); touch-action: manipulation; }
