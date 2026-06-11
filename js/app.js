@@ -2174,14 +2174,12 @@
 
     const playerDiv = overlay.querySelector('#youtube-player');
     const videoId = lec.video.split('/embed/')[1];
-    const fallbackLink = document.createElement('a');
-    fallbackLink.href = `https://www.youtube.com/watch?v=${videoId}`;
-    fallbackLink.target = '_blank';
-    fallbackLink.textContent = '▶ Ver en YouTube';
-    fallbackLink.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;text-decoration:none;font-size:1.2rem;z-index:2;';
-    playerDiv.style.position = 'relative';
-    playerDiv.appendChild(fallbackLink);
-    fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`).then(r => r.json()).then(d => { if (d && d.html) { const tmp = document.createElement('div'); tmp.innerHTML = d.html; const oembedIframe = tmp.querySelector('iframe'); if (oembedIframe) { oembedIframe.style.width = '100%'; oembedIframe.style.height = '100%'; playerDiv.appendChild(oembedIframe); fallbackLink.style.display = 'none'; } } }).catch(() => {});
+    playerDiv.innerHTML = `
+      <iframe src="https://www.youtube.com/embed/${videoId}" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+      <div style="position:absolute;bottom:0;left:0;right:0;text-align:center;padding:0.5rem;z-index:3;">
+        <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" style="color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;">▶ Ver en YouTube si no carga</a>
+      </div>
+    `; playerDiv.style.position = 'relative';
 
     const close = () => { overlay.remove(); showStudentPanel(); };
     overlay.querySelector('#closeLeccionBtn').addEventListener('click', close);
