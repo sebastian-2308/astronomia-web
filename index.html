@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semillero Astronómico Venezuela - El Cometa</title>
+  <meta name="description" content="Portal interactivo de astronomía: simulador de gravedad, calculadoras, galería del sistema solar, IA astronómica, cuestionario de 100 preguntas, juego de asteroides y más.">
+  <meta name="keywords" content="astronomía, Venezuela, olimpiada, semillero, sistema solar, espacio, telescopio, planetas">
+  <meta name="author" content="Semillero Astronómico Venezuela">
+  <meta property="og:title" content="Semillero Astronómico Venezuela - El Cometa">
+  <meta property="og:description" content="Portal interactivo de astronomía">
+  <meta name="theme-color" content="#0a0e1a">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☄️</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="header-bar">
+  <a href="#" class="header-logo">
+    <span>☄️ Semillero Astronómico</span>
+  </a>
+  <div class="header-controls">
+    <button class="btn-admin" id="adminBtn">👑 Admin</button>
+    <button class="btn-icon" id="themeToggle" aria-label="Cambiar tema">
+      <svg viewBox="0 0 24 24" width="20" height="20">
+        <path d="M12 3v1m0 16v1m9-9h-1m-16 0H3m15.32-6.32l-.71-.71M5.38 18.38l-.71-.71M18.32 18.32l-.71-.71M5.38 5.38l-.71-.71M12 7a5 5 0 100 10 5 5 0 000-10z" stroke="currentColor" stroke-width="2" fill="none"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="hero">
+  <canvas id="starfield"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">🔭 Portal Astronómico Interactivo</div>
+    <h1>✨ Semillero Astronómico Venezuela ✨</h1>
+    <p>Simulador de gravedad · Calculadoras · IA Astronómica · Sistema Solar · Cuestionario · Juego de Asteroides</p>
+  </div>
+</div>
+
+<div class="tabs-bar" id="mainTabsBar">
+  <button class="tab-btn active" data-tab="tab1">🌍 Inicio</button>
+  <button class="tab-btn" data-tab="tab2">🪐 Gravedad</button>
+  <button class="tab-btn" data-tab="tab3">📊 Calculadoras</button>
+  <button class="tab-btn" data-tab="tab4">🌌 Planetas</button>
+  <button class="tab-btn" data-tab="tab5">📰 El Cometa</button>
+  <button class="tab-btn" data-tab="tab6">☄️ Recursos</button>
+  <button class="tab-btn" data-tab="tab7">🤖 IA</button>
+  <button class="tab-btn" data-tab="tab8">📡 Cuestionario</button>
+  <button class="tab-btn" data-tab="tab9">🎮 Asteroides</button>
+  <button class="tab-btn" data-tab="tab10">📞 Soporte</button>
+  <div class="search-wrapper">
+    <input type="text" id="globalSearch" placeholder="Buscar..." aria-label="Buscar">
+    <button id="globalSearchBtn" aria-label="Buscar">🔍</button>
+  </div>
+</div>
+
+<main class="main-content">
+
+<!-- TAB 1: INICIO -->
+<div id="tab1" class="tab-content active">
+  <div class="card">
+    <h2>🚀 Bienvenidos al Semillero</h2>
+    <p class="editable-text">Herramientas para aprender astronomía, prepararte para olimpiadas y mantenerte al día con las noticias del espacio.</p>
+    <div class="result-box editable-text">💡 Explora las pestañas: simulador de gravedad, calculadora de telescopio, visor de planetas, el periódico "El Cometa", recursos visuales, IA astronómica, el desafío de 100 preguntas y el juego de Asteroides.</div>
+  </div>
+
+  <div id="adminVisitasPanel" class="card" style="display:none;">
+    <h2>📊 Estadísticas de Visitas</h2>
+    <div style="display:flex;gap:2rem;">
+      <p>Visitas totales: <strong id="visitasTotales">0</strong></p>
+      <p>Visitas hoy: <strong id="visitasHoy">0</strong></p>
+    </div>
+  </div>
+
+  <div id="adminControlsPanel" class="card" style="display:none;">
+    <h2>⚙️ Controles de Administrador</h2>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+      <button class="btn btn-sm btn-secondary" id="resetRankingBtn">🗑️ Resetear Ranking</button>
+      <button class="btn btn-sm btn-secondary" id="resetVisitasBtn">📊 Resetear Visitas</button>
+      <button class="btn btn-sm btn-secondary" id="exportDataBtn">📥 Exportar Datos</button>
+    </div>
+  </div>
+
+  <div class="card" data-editable="olimpiadas">
+    <h2>🏆 II Olimpiada Venezolana de Astronomía 2026</h2>
+    <p class="editable-text">El Ministerio del Poder Popular para Ciencia y Tecnología (Mincyt) y el Programa Nacional Semilleros Científicos invitan a jóvenes entre 12 y 19 años a participar en la II Edición de la Olimpiada Venezolana de Astronomía 2026.</p>
+    <p class="editable-text"><strong>Fechas clave:</strong> Inscripciones hasta el 12 de enero de 2026. El evento se desarrollará en tres etapas: estadal, regional y nacional.</p>
+  </div>
+
+  <div class="card" data-editable="cidata">
+    <h2>🔭 CIDATA</h2>
+    <p class="editable-text">Fundación Centro de Investigaciones de Astronomía y Tecnologías Aplicadas "Francisco J. Duarte" (CIDATA). En 2025 alcanzó un impacto histórico con más de 30 mil personas atendidas.</p>
+    <p class="editable-text">Visita: <a href="https://cidata.gob.ve/" target="_blank">cidata.gob.ve</a></p>
+  </div>
+
+  <div class="card">
+    <h2>🌌 Planetario Stellarium</h2>
+    <iframe src="https://stellarium-web.org/" style="width:100%;height:450px;border-radius:var(--radius);border:1px solid var(--border);" loading="lazy" title="Stellarium"></iframe>
+  </div>
+
+  <div class="card">
+    <h2>🪐 Sistema Solar 3D</h2>
+    <iframe src="https://www.solarsystemscope.com/" sandbox="allow-scripts allow-same-origin allow-popups" style="width:100%;height:500px;border-radius:var(--radius);border:1px solid var(--border);background:#000;" loading="lazy" title="Solar System Scope"></iframe>
+  </div>
+
+  <div class="card">
+    <h2>🌍 Tierra en Vivo</h2>
+    <div style="position:relative;width:100%;padding-bottom:56.25%;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:#000;">
+      <iframe src="https://www.youtube.com/embed/86YLFOog4GM?autoplay=1&mute=1" style="position:absolute;top:0;left:0;width:100%;height:100%;" allow="autoplay;encrypted-media" allowfullscreen loading="lazy" title="NASA ISS Live"></iframe>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🌙 Fase Lunar Actual</h2>
+    <canvas id="moonCanvas" class="moon-canvas" width="220" height="220"></canvas>
+    <div class="moon-info" id="moonInfo">Cargando...</div>
+  </div>
+
+  <div class="card">
+    <h2>💡 Sabías que...</h2>
+    <div class="fact-card" id="factDisplay">Cargando...</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;">
+      <button class="btn btn-sm btn-secondary" id="prevFactBtn">◀ Anterior</button>
+      <span id="factCounter" style="color:var(--text-secondary);font-size:0.85rem;">1 / 20</span>
+      <button class="btn btn-sm btn-secondary" id="nextFactBtn">Siguiente ▶</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📅 Hoy en la Historia Espacial</h2>
+    <div class="space-history">
+      <span style="font-size:2rem;">📜</span>
+      <span id="spaceHistoryText">Cargando...</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎲 Objeto Espacial Aleatorio</h2>
+    <div class="space-object-card" id="randomSpaceObject">
+      <p style="font-size:1rem;opacity:0.7;">Haz clic para descubrir</p>
+      <button id="randomSpaceBtn" class="btn btn-primary" style="margin-top:0.5rem;">🎲 ¡Descubrir!</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📅 Eventos Astronómicos 2026</h2>
+    <div id="eventosAstronomicos"></div>
+  </div>
+
+  <div class="card">
+    <h2>🚀 Misiones Espaciales Destacadas</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;" id="misionesContainer"></div>
+  </div>
+</div>
+
+<!-- TAB 2: GRAVEDAD -->
+<div id="tab2" class="tab-content">
+  <div class="card">
+    <h2>🪐 Simulador: Gravedad Tierra-Luna</h2>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Muestra la órbita de la Luna alrededor de la Tierra. Cambia la distancia y observa cómo varía la velocidad orbital.</p>
+    <label class="form-label">Distancia (miles de km):</label>
+    <input type="range" id="distanciaLuna" min="50" max="400" value="384" step="1" style="width:100%;">
+    <span id="distanciaValor" style="color:var(--accent);font-weight:600;">384,000 km</span>
+    <div class="canvas-container" style="margin-top:1rem;">
+      <canvas id="simuladorCanvas" width="600" height="300" style="width:100%;height:auto;aspect-ratio:2/1;"></canvas>
+    </div>
+    <div id="infoVelocidad" class="result-box">Velocidad orbital: 1.02 km/s</div>
+  </div>
+</div>
+
+<!-- TAB 3: CALCULADORAS -->
+<div id="tab3" class="tab-content">
+  <div class="card">
+    <h2>🔭 Calculadora de Telescopio</h2>
+    <p style="color:var(--text-secondary);">Calcula el aumento, magnitud límite y campo real según diámetro, focal y ocular.</p>
+    <label class="form-label">Diámetro (mm)</label>
+    <input class="form-input" type="number" id="diametroCalc" value="150">
+    <label class="form-label">Distancia focal (mm)</label>
+    <input class="form-input" type="number" id="focalCalc" value="1200">
+    <label class="form-label">Ocular (mm)</label>
+    <input class="form-input" type="number" id="ocularCalc" value="25">
+    <button class="btn btn-primary" id="calcTelescopioBtn" style="margin-top:0.5rem;">Calcular</button>
+    <div id="resultadoCalc" class="result-box">Aumento: --x | Magnitud límite: -- | Campo real: --°</div>
+  </div>
+
+  <div class="card">
+    <h2>🔄 Conversor de Unidades Astronómicas</h2>
+    <p style="color:var(--text-secondary);">Convierte entre UA, km, pársecs y años luz.</p>
+    <div class="grid-2">
+      <div><label class="form-label">UA</label><input class="form-input" type="number" id="ua" value="1"></div>
+      <div><label class="form-label">Kilómetros</label><input class="form-input" type="number" id="km" value="149597870.7"></div>
+      <div><label class="form-label">Pársecs</label><input class="form-input" type="number" id="pc" value="4.848e-6"></div>
+      <div><label class="form-label">Años Luz</label><input class="form-input" type="number" id="ly" value="1.581e-5"></div>
+    </div>
+    <button class="btn btn-primary" id="convertirAstro">Convertir</button>
+    <div id="resultConversor" class="result-box">1 UA = 149,597,871 km</div>
+  </div>
+
+  <div class="card">
+    <h2>🕳️ Calculadora de Agujero Negro</h2>
+    <p style="color:var(--text-secondary);">Calcula el radio de Schwarzschild según la masa.</p>
+    <label class="form-label">Masa (masas solares)</label>
+    <input class="form-input" type="number" id="bhMass" value="10" min="1">
+    <button class="btn btn-primary" id="calcBHBtn">Calcular</button>
+    <div id="resultBH" class="result-box">Radio de Schwarzschild: 29.5 km</div>
+  </div>
+
+  <div class="card">
+    <h2>🚀 Velocidad de Escape</h2>
+    <p style="color:var(--text-secondary);">Calcula la velocidad para escapar de la gravedad de un cuerpo celeste.</p>
+    <label class="form-label">Masa (kg)</label>
+    <input class="form-input" type="number" id="escMass" value="5.972e24">
+    <label class="form-label">Radio (km)</label>
+    <input class="form-input" type="number" id="escRadius" value="6371">
+    <button class="btn btn-primary" id="calcEscBtn">Calcular</button>
+    <div id="resultEsc" class="result-box">Velocidad de escape: 11.19 km/s</div>
+  </div>
+</div>
+
+<!-- TAB 4: PLANETAS -->
+<div id="tab4" class="tab-content">
+  <div class="card">
+    <h2>🌌 Sistema Solar Interactivo</h2>
+    <p style="color:var(--text-secondary);margin-bottom:0.5rem;">Haz clic en cualquier planeta para ver su información detallada.</p>
+    <div class="canvas-container">
+      <canvas id="planetsCanvas" width="500" height="500" style="width:100%;height:auto;aspect-ratio:1/1;"></canvas>
+    </div>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem;">
+      <button class="btn btn-sm btn-secondary" id="togglePlanetSpeedBtn">⏩ Acelerar</button>
+      <button class="btn btn-sm btn-secondary" id="togglePlanetLabelsBtn">🏷️ Nombres</button>
+    </div>
+    <div class="detail-panel" id="planetDetailPanel">
+      <h2 id="planetDetailName" style="margin-bottom:0.25rem;">🌍 Tierra</h2>
+      <p id="planetDetailDesc" style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.5rem;">Nuestro hogar.</p>
+      <div class="detail-grid" id="planetDetailGrid"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Datos de los Planetas</h2>
+    <div class="planet-grid" id="planetDataGrid"></div>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Edad y Peso en Otros Planetas</h2>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+      <label class="form-label" style="min-width:120px;">Edad (años): <input class="form-input" type="number" id="userAge" value="20" min="1" style="width:80px;display:inline;"></label>
+      <label class="form-label" style="min-width:120px;">Peso (kg): <input class="form-input" type="number" id="userWeight" value="70" min="1" style="width:80px;display:inline;"></label>
+      <button class="btn btn-primary" id="calcAgeWeightBtn" style="align-self:flex-end;">Calcular</button>
+    </div>
+    <div id="ageWeightResults">
+      <div class="grid-3" id="ageWeightGrid"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Comparativa de Planetas</h2>
+    <div style="overflow-x:auto;">
+      <table class="comparison-table">
+        <thead><tr><th>Planeta</th><th>Diámetro</th><th>Masa</th><th>Gravedad</th><th>Día</th><th>Año</th><th>Lunas</th><th>Temperatura</th></tr></thead>
+        <tbody id="comparisonBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 5: EL COMETA -->
+<div id="tab5" class="tab-content">
+  <div class="card">
+    <h2>📰 El Cometa - Noticias</h2>
+    <div id="customNewsContainer" class="news-grid"></div>
+    <div class="admin-panel" id="adminNewsPanel">
+      <h3 style="margin-bottom:0.5rem;">➕ Agregar/Editar noticia</h3>
+      <input class="form-input" type="text" id="newsTitle" placeholder="Título">
+      <textarea class="form-input" id="newsDesc" placeholder="Descripción breve" rows="2"></textarea>
+      <input class="form-input" type="text" id="newsImgUrl" placeholder="URL de la imagen">
+      <input class="form-input" type="text" id="newsLink" placeholder="Enlace">
+      <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+        <button class="btn btn-primary" id="saveNewsBtn">Guardar noticia</button>
+        <button class="btn btn-secondary" id="cancelNewsEditBtn">Cancelar</button>
+      </div>
+      <input type="hidden" id="editingNewsId" value="">
+    </div>
+    <div class="result-box" id="efemeridesBox" style="margin-top:1rem;">
+      <h3>📅 Efemérides / Personajes</h3>
+      <p id="efemeridesText" style="margin-top:0.5rem;">Cargando...</p>
+      <div id="efemeridesAdminPanel" style="display:none;margin-top:0.75rem;">
+        <button class="btn btn-sm btn-secondary" id="addEfemerideBtn">➕ Añadir</button>
+        <button class="btn btn-sm btn-secondary" id="editEfemerideBtn">✏️ Editar</button>
+        <button class="btn btn-sm btn-danger" id="delEfemerideBtn">🗑️</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🔭 Imagen Astronómica del Día (NASA)</h2>
+    <div id="apodContainer"><div class="loader">Cargando...</div></div>
+  </div>
+</div>
+
+<!-- TAB 6: RECURSOS -->
+<div id="tab6" class="tab-content">
+  <div class="card">
+    <h2>👩‍🚀 Galería del Sistema Solar</h2>
+    <div id="galleryAdminBar" class="admin-panel" style="margin-bottom:1rem;">
+      <button class="btn btn-sm btn-secondary" id="addGalleryBtn">➕ Añadir imagen</button>
+    </div>
+    <div class="gallery-grid" id="sistemaSolarGallery"></div>
+  </div>
+  <div class="card">
+    <h2>⭐ Visor de Constelaciones</h2>
+    <p style="color:var(--text-secondary);">Selecciona una constelación para ver su representación.</p>
+    <div class="constellation-selector" id="constellationSelector"></div>
+    <div class="canvas-container">
+      <canvas id="constellationCanvas" class="constellation-canvas" width="600" height="400"></canvas>
+    </div>
+    <div class="constellation-info" id="constellationInfo" style="text-align:center;margin-top:0.5rem;color:var(--text-secondary);font-size:0.85rem;">Selecciona una constelación arriba</div>
+  </div>
+</div>
+
+<!-- TAB 7: IA -->
+<div id="tab7" class="tab-content">
+  <div class="card">
+    <h2>🤖 Asistente Astronómica</h2>
+    <p style="color:var(--text-secondary);">Responde preguntas sobre astronomía usando inteligencia artificial.</p>
+    <div class="chat-box" id="chatBox">
+      <div class="chat-msg bot">🔭 ¡Hola! Pregúntame sobre el espacio o usa los botones de abajo.</div>
+    </div>
+    <div style="display:flex;gap:0.5rem;">
+      <input class="form-input" type="text" id="userQuestion" placeholder="Ej: ¿Qué es un agujero negro?" style="flex:1;">
+      <button class="btn btn-primary" id="askBtn">Preguntar</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;">
+      <button class="suggest-btn" data-q="¿Qué es un agujero negro?">🕳️ Agujero negro</button>
+      <button class="suggest-btn" data-q="¿Cómo nace una estrella?">⭐ Nacer estrella</button>
+      <button class="suggest-btn" data-q="¿Hay vida en Marte?">🔴 Vida en Marte</button>
+      <button class="suggest-btn" data-q="¿Qué es la materia oscura?">🌑 Materia oscura</button>
+      <button class="suggest-btn" data-q="¿Qué pasó en el Big Bang?">💥 Big Bang</button>
+      <button class="suggest-btn" data-q="¿Cómo funciona un telescopio?">🔭 Telescopio</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 8: CUESTIONARIO -->
+<div id="tab8" class="tab-content">
+  <div class="card">
+    <h2>📡 Desafío de 100 Preguntas</h2>
+    <p style="color:var(--text-secondary);">Responde las 100 preguntas de astronomía sin fallar. Cada acierto suma un punto. Si fallas, se guarda tu puntuación en el ranking.</p>
+    <div id="loginSection">
+      <label class="form-label">Ingresa tu nombre:</label>
+      <div style="display:flex;gap:0.5rem;">
+        <input class="form-input" type="text" id="playerName" placeholder="Tu nombre" style="max-width:300px;">
+        <button class="btn btn-success" id="startQuizBtn">Comenzar Desafío</button>
+      </div>
+    </div>
+    <div id="quizSection" style="display:none;">
+      <div class="quiz-header">
+        <h3>Jugador: <strong><span id="displayName"></span></strong></h3>
+        <h3>Pregunta <strong><span id="currentQuestionNumber">1</span>/100</strong></h3>
+        <h3 class="timer" id="quizTimer">⏱️ 15s</h3>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:1%;"></div>
+      </div>
+      <div id="questionContainer">
+        <p id="questionText" style="font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;"></p>
+        <div id="optionsContainer"></div>
+      </div>
+      <div id="quizMessage" class="result-box" style="display:none;"></div>
+      <button id="nextQuestionBtn" class="btn btn-primary" style="display:none;margin-top:1rem;">Siguiente →</button>
+    </div>
+    <div style="margin-top:2rem;">
+      <h3>🏆 Ranking del Día</h3>
+      <ul id="rankingList" class="ranking-list"><li>Cargando...</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 9: ASTEROIDES -->
+<div id="tab9" class="tab-content">
+  <div class="card">
+    <h2>🎮 Asteroides: Edición Definitiva</h2>
+    <div class="game-container">
+      <div class="canvas-container" style="width:100%;">
+        <canvas id="gameCanvas" width="800" height="800"></canvas>
+      </div>
+      <div class="mobile-controls">
+        <div class="arrow-controls" style="display:flex;gap:0.5rem;">
+          <button class="mobile-arrow" id="mobileLeftBtn">◀</button>
+          <button class="mobile-arrow" id="mobileUpBtn">▲</button>
+          <button class="mobile-arrow" id="mobileRightBtn">▶</button>
+        </div>
+        <button class="shoot-btn" id="mobileShootBtn">🔫 Disparar</button>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;align-items:center;margin:0.75rem 0;">
+        <button class="btn btn-success" id="startGameBtn">▶️ Iniciar Juego</button>
+        <button class="btn btn-secondary" id="restartGameBtn" style="display:none;">🔄 Reiniciar</button>
+        <button class="btn btn-secondary" id="fullscreenBtn">⛶ Pantalla Completa</button>
+        <span style="color:var(--text-secondary);font-size:0.9rem;">Puntaje: <strong id="gameScoreDisplay" style="color:var(--accent);">0</strong></span>
+        <span class="lives-display" style="font-size:1.3rem;">❤️❤️❤️</span>
+      </div>
+      <div style="margin-top:1rem;width:100%;">
+        <h3>🏆 Ranking de Asteroides</h3>
+        <ul id="gameRankingList" class="ranking-list"><li>Cargando...</li></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 10: SOPORTE -->
+<div id="tab10" class="tab-content">
+  <div class="card">
+    <h2>📞 Soporte</h2>
+    <p>WhatsApp: <a href="https://wa.me/584242102123" target="_blank">+58 424 2102123</a></p>
+    <p style="margin-top:1rem;color:var(--text-secondary);">Para reportar errores o sugerencias, contáctanos por WhatsApp.</p>
+  </div>
+</div>
+
+</main>
+
+<button class="back-to-top" id="backToTopBtn" aria-label="Volver arriba">↑</button>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h3>☄️ Semillero Astronómico</h3>
+      <p>Portal interactivo de astronomía para estudiantes, curiosos y apasionados del espacio.</p>
+    </div>
+    <div>
+      <h3>🔗 Enlaces</h3>
+      <p><a href="https://cidata.gob.ve/" target="_blank">CIDATA</a></p>
+      <p><a href="https://mincyt.gob.ve/" target="_blank">Mincyt</a></p>
+      <p><a href="https://stellarium-web.org/" target="_blank">Stellarium</a></p>
+    </div>
+    <div>
+      <h3>📊 Estadísticas</h3>
+      <p>Visitas totales: <strong id="footerVisitas">0</strong></p>
+      <p>Visitas hoy: <strong id="footerVisitasHoy">0</strong></p>
+    </div>
+    <div>
+      <h3>⌨️ Atajos</h3>
+      <p><span class="kbd">D</span> Modo oscuro</p>
+      <p><span class="kbd">?</span> Ayuda</p>
+      <p><span class="kbd">/</span> Buscar</p>
+    </div>
+  </div>
+  <hr style="border-color:var(--border);margin:1rem 0;">
+  <small>Astronomía Caracas · Semillero Astronómico Venezuela © 2026</small>
+</footer>
+
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <h3>🔐 Acceso Administrador</h3>
+    <input class="form-input" type="text" id="adminUser" placeholder="Usuario">
+    <input class="form-input" type="password" id="adminPass" placeholder="Contraseña">
+    <div id="loginError" style="color:var(--danger);font-size:0.85rem;margin-top:0.3rem;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="cancelLoginBtn">Cancelar</button>
+      <button class="btn btn-primary" id="confirmLoginBtn">Ingresar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDIT -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <h3 id="editModalTitle">Editar contenido</h3>
+    <div id="editModalFields"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="cancelEditBtn">Cancelar</button>
+      <button class="btn btn-primary" id="saveEditBtn">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes shoot {
+    0% { opacity: 1; transform: translate(0, 0); }
+    100% { opacity: 0; transform: translate(-200px, 200px); }
+  }
+</style>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
