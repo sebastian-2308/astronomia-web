@@ -1993,6 +1993,207 @@
     if (names.length) drawConstellation(names[0]);
   }
 
+  // ==================== AULA VIRTUAL ====================
+  function initAulaVirtual() {
+    $('enterAulaBtn').addEventListener('click', enterAula);
+    $('studentNameInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') enterAula();
+    });
+    $('logoutStudentBtn').addEventListener('click', logoutAula);
+    $('backToCoursesBtn').addEventListener('click', backToCourses);
+
+    const saved = localStorage.getItem('astronomia_student');
+    if (saved) {
+      try {
+        APP.state.student = JSON.parse(saved);
+        showStudentPanel();
+      } catch (e) {
+        localStorage.removeItem('astronomia_student');
+      }
+    }
+    renderCourses();
+  }
+
+  function enterAula() {
+    const name = $('studentNameInput').value.trim();
+    if (!name) { showToast('✏️ Ingresa tu nombre', 'error'); return; }
+    APP.state.student = { nombre: name, progreso: {} };
+    localStorage.setItem('astronomia_student', JSON.stringify(APP.state.student));
+    showStudentPanel();
+    showToast(`👋 Bienvenido, ${name}!`, 'success');
+  }
+
+  function logoutAula() {
+    APP.state.student = null;
+    localStorage.removeItem('astronomia_student');
+    $('studentDashboard').style.display = 'none';
+    $('studentLoginCard').style.display = 'block';
+    backToCourses();
+    showToast('👋 Sesión cerrada', 'info');
+  }
+
+  function showStudentPanel() {
+    $('studentLoginCard').style.display = 'none';
+    $('studentDashboard').style.display = 'block';
+    const s = APP.state.student;
+    const totalLecciones = DATA.cursosVirtuales.reduce((acc, c) => acc + c.modulos.reduce((a, m) => a + m.lecciones.length, 0), 0);
+    const completadas = Object.values(s.progreso).filter(v => v).length;
+    const pct = totalLecciones > 0 ? Math.round(completadas / totalLecciones * 100) : 0;
+
+    $('studentProgress').innerHTML = `
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem;">
+        <span><strong>${s.nombre}</strong></span>
+        <span>📚 Progreso: <strong>${completadas}/${totalLecciones}</strong> lecciones</span>
+      </div>
+      <div class="progress-bar" style="margin:0.3rem 0;">
+        <div class="progress-fill" style="width:${pct}%;"></div>
+      </div>
+      <small style="color:var(--text-secondary);">${pct}% completado</small>
+    `;
+  }
+
+  function renderCourses() {
+    const container = $('coursesContainer');
+    if (!container) return;
+    container.innerHTML = `
+      <div class="card">
+        <h2>📖 Cursos Disponibles</h2>
+        <div class="courses-grid">
+          ${DATA.cursosVirtuales.map((c, i) => `
+            <div class="course-card" data-course="${i}" style="--course-color:${c.color};">
+              <div class="course-card-img" style="background-image:url('${c.img}');"></div>
+              <div class="course-card-body">
+                <span class="course-badge" style="background:${c.color};">${c.siglas}</span>
+                <h3>${c.titulo}</h3>
+                <p>${c.desc}</p>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem;">
+                  <small style="color:var(--text-secondary);">${c.modulos.length} módulos · ${c.modulos.reduce((a, m) => a + m.lecciones.length, 0)} lecciones</small>
+                  <span style="font-size:1.2rem;">→</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    qsa('.course-card').forEach(el => {
+      el.addEventListener('click', () => openCourse(+el.dataset.course));
+    });
+  }
+
+  function openCourse(index) {
+    const course = DATA.cursosVirtuales[index];
+    if (!course) return;
+    APP.state.currentCourse = index;
+    $('coursesContainer').style.display = 'none';
+    $('courseDetailView').style.display = 'block';
+
+    const s = APP.state.student;
+    let content = `
+      <div class="card">
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+          <div style="flex-shrink:0;width:100%;max-width:300px;border-radius:var(--radius);overflow:hidden;">
+            <img src="${course.img}" alt="${course.titulo}" style="width:100%;height:180px;object-fit:cover;border-radius:var(--radius);">
+          </div>
+          <div style="flex:1;">
+            <span class="course-badge" style="background:${course.color};">${course.siglas}</span>
+            <h2 style="margin:0.5rem 0;">${course.titulo}</h2>
+            <p style="color:var(--text-secondary);">${course.desc}</p>
+          </div>
+        </div>
+      </div>
+      ${course.modulos.map((mod, mi) => `
+        <div class="card modulo-card">
+          <h3 style="display:flex;align-items:center;gap:0.5rem;">
+            <span>📦 ${mod.titulo}</span>
+            <span class="course-badge" style="background:${course.color};font-size:0.65rem;">${mod.lecciones.length} lecciones</span>
+          </h3>
+          <div class="lecciones-list">
+            ${mod.lecciones.map((lec, li) => {
+              const key = `${course.id}-${mi}-${li}`;
+              const done = s && s.progreso && s.progreso[key];
+              return `
+                <div class="leccion-item ${done ? 'completed' : ''}" data-leccion="${key}" data-mi="${mi}" data-li="${li}">
+                  <div class="leccion-status">${done ? '✅' : '📄'}</div>
+                  <div class="leccion-info">
+                    <strong>${lec.titulo}</strong>
+                    <small style="color:var(--text-secondary);">${done ? 'Completada' : 'Pendiente'}</small>
+                  </div>
+                  <span style="color:var(--accent);font-size:0.85rem;">▶</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('')}
+    `;
+
+    $('courseDetailContent').innerHTML = content;
+
+    qsa('.leccion-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const [courseId, mi, li] = el.dataset.leccion.split('-');
+        openLeccion(course, +mi, +li);
+      });
+    });
+  }
+
+  function openLeccion(course, mi, li) {
+    const mod = course.modulos[mi];
+    const lec = mod.lecciones[li];
+    const key = `${course.id}-${mi}-${li}`;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay open';
+    overlay.id = 'leccionModal';
+    overlay.innerHTML = `
+      <div class="modal-box leccion-modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+          <div>
+            <small style="color:var(--text-secondary);">${course.titulo} › ${mod.titulo}</small>
+            <h2 style="margin-top:0.25rem;">${lec.titulo}</h2>
+          </div>
+          <button class="btn btn-sm btn-secondary" id="closeLeccionBtn">✕</button>
+        </div>
+        <div style="aspect-ratio:16/9;background:#000;border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;">
+          <iframe src="${lec.video}" style="width:100%;height:100%;border:none;" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div style="background:var(--bg-card);padding:1rem;border-radius:var(--radius);margin-bottom:1rem;max-height:200px;overflow-y:auto;font-size:0.9rem;line-height:1.7;">
+          ${lec.texto}
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" id="closeLeccionBtn2">Cerrar</button>
+          <button class="btn btn-primary" id="markCompleteBtn">${APP.state.student && APP.state.student.progreso && APP.state.student.progreso[key] ? '✅ Completada' : 'Marcar como completada'}</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const close = () => { overlay.remove(); showStudentPanel(); };
+    overlay.querySelector('#closeLeccionBtn').addEventListener('click', close);
+    overlay.querySelector('#closeLeccionBtn2').addEventListener('click', close);
+
+    overlay.querySelector('#markCompleteBtn').addEventListener('click', () => {
+      if (!APP.state.student) { showToast('🔑 Identifícate primero', 'error'); return; }
+      if (!APP.state.student.progreso) APP.state.student.progreso = {};
+      APP.state.student.progreso[key] = true;
+      localStorage.setItem('astronomia_student', JSON.stringify(APP.state.student));
+      showToast(`✅ "${lec.titulo}" completada!`, 'success');
+      close();
+      openCourse(APP.state.currentCourse);
+    });
+
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) close();
+    });
+  }
+
+  function backToCourses() {
+    $('courseDetailView').style.display = 'none';
+    $('coursesContainer').style.display = 'block';
+  }
+
   // ==================== KEYBOARD SHORTCUTS ====================
   function initKeyboard() {
     window.addEventListener('keydown', e => {
@@ -2000,13 +2201,17 @@
       const key = e.key.toLowerCase();
       if (key === 'd') $('themeToggle')?.click();
       if (key === '/') { e.preventDefault(); $('globalSearch')?.focus(); }
-      if (key === '?') showToast('⌨️ Atajos: D=modo oscuro, /=buscar, 1-9=pestañas', 'info');
+      if (key === '?') showToast('⌨️ Atajos: D=modo oscuro, /=buscar, 1-9,0,-=pestañas', 'info');
       if (key >= '1' && key <= '9') {
         const tab = qs(`.tab-btn[data-tab="tab${key}"]`);
         if (tab) tab.click();
       }
       if (key === '0') {
         const tab = qs('.tab-btn[data-tab="tab10"]');
+        if (tab) tab.click();
+      }
+      if (key === '-' || key === '_') {
+        const tab = qs('.tab-btn[data-tab="tab11"]');
         if (tab) tab.click();
       }
     });
@@ -2090,6 +2295,7 @@
     initKeyboard();
     initSearch();
     initBackToTop();
+    initAulaVirtual();
 
     renderPlanetGrid();
     renderComparison();

@@ -874,6 +874,113 @@ canvas { max-width: 100%; height: auto; display: block; }
 .quiz-header h3 strong { color: var(--accent); }
 .quiz-header .timer { color: var(--accent); font-size: 1rem; }
 
+/* AULA VIRTUAL */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.course-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.course-card:hover {
+  border-color: var(--course-color, var(--accent));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.course-card-img {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.course-card-body {
+  padding: 1rem;
+  position: relative;
+}
+
+.course-badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.course-card-body h3 {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.course-card-body p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+  line-height: 1.5;
+}
+
+.modulo-card {
+  transition: var(--transition);
+}
+
+.lecciones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.leccion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.leccion-item:hover {
+  border-color: var(--accent);
+  background: rgba(37, 99, 235, 0.04);
+}
+.leccion-item.completed {
+  border-left: 3px solid var(--success);
+  opacity: 0.85;
+}
+
+.leccion-status {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.leccion-info {
+  flex: 1;
+}
+.leccion-info strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.leccion-modal-box {
+  max-width: 720px !important;
+}
+
 @media (max-width: 768px) {
   .header-bar { padding: 0.5rem 1rem; }
   .header-logo { font-size: 0.95rem; }

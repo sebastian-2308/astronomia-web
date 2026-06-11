@@ -247,5 +247,85 @@ const DATA = {
       lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]],
       info: "Escorpión representa al escorpión que mató a Orión. Antares es una supergigante roja 700 veces más grande que el Sol."
     }
-  }
+  },
+
+  cursosVirtuales: [
+    {
+      id: 'astronomia-dp',
+      titulo: 'Astronomía General',
+      siglas: 'DP',
+      desc: 'Descubriendo el Universo: desde los fundamentos de la observación astronómica hasta los misterios de la cosmología moderna.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Hubble_ultra_deep_field_high_rez_edit1.jpg/800px-Hubble_ultra_deep_field_high_rez_edit1.jpg',
+      color: '#2563eb',
+      modulos: [
+        {
+          titulo: 'Introducción a la Astronomía',
+          lecciones: [
+            { titulo: '¿Qué es la Astronomía?', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La astronomía es la ciencia que estudia los cuerpos celestes del universo: planetas, estrellas, galaxias y más. Es una de las ciencias más antiguas, con raíces en las civilizaciones babilónica, griega, china y maya. Hoy combina observación telescópica, física teórica y exploración espacial para comprender el cosmos.' },
+            { titulo: 'Historia de la Astronomía', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Desde las primeras observaciones a simple vista hasta el telescopio espacial James Webb, la astronomía ha evolucionado enormemente. Copérnico, Galileo, Kepler y Newton sentaron las bases. En el siglo XX, Hubble descubrió la expansión del universo, y hoy exploramos exoplanetas y agujeros negros.' },
+            { titulo: 'Instrumentos de Observación', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Los telescopios son la herramienta principal del astrónomo. Hay telescopios refractores (lentes), reflectores (espejos) y radiotelescopios. El Hubble orbita la Tierra desde 1990, y el James Webb, lanzado en 2021, observa el universo infrarrojo desde el punto L2.' }
+          ]
+        },
+        {
+          titulo: 'El Sistema Solar',
+          lecciones: [
+            { titulo: 'El Sol: Nuestra Estrella', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El Sol contiene el 99.86% de toda la masa del sistema solar. Es una estrella de tipo G2V, de color amarillo-blanca. Su energía proviene de la fusión nuclear de hidrógeno en helio en su núcleo, donde la temperatura alcanza los 15 millones de grados Celsius.' },
+            { titulo: 'Los Planetas Terrestres', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Mercurio, Venus, Tierra y Marte son los planetas rocosos. La Tierra es el único con vida conocida. Venus es el más caliente (462°C) por su efecto invernadero. Marte tiene el volcán más grande: el Monte Olimpo, 2.5 veces más alto que el Everest.' },
+            { titulo: 'Los Gigantes Gaseosos', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Júpiter, Saturno, Urano y Neptuno son planetas gigantes. Júpiter es el más grande y tiene la Gran Mancha Roja, una tormenta mayor que la Tierra. Saturno es famoso por sus anillos. Urano rota de lado. Neptuno tiene vientos supersónicos de 2,100 km/h.' }
+          ]
+        },
+        {
+          titulo: 'Estrellas y Galaxias',
+          lecciones: [
+            { titulo: 'Nacimiento y Muerte de las Estrellas', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las estrellas nacen en nebulosas, colapsando nubes de gas y polvo. Su vida depende de su masa: las pequeñas como el Sol viven ~10 mil millones de años; las masivas viven millones y mueren en supernovas, dejando estrellas de neutrones o agujeros negros.' },
+            { titulo: 'Tipos de Galaxias', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Hay galaxias espirales (como la Vía Láctea), elípticas (como M87) e irregulares (como las Nubes de Magallanes). Nuestra galaxia tiene entre 100 y 400 mil millones de estrellas. La galaxia más cercana es Andrómeda, a 2.5 millones de años luz.' },
+            { titulo: 'El Universo en Expansión', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Edwin Hubble descubrió en 1929 que el universo se expande: las galaxias se alejan unas de otras. Esto llevó a la teoría del Big Bang. Hoy sabemos que la expansión se acelera por la energía oscura, que constituye el 68% del universo.' }
+          ]
+        },
+        {
+          titulo: 'Cosmología Moderna',
+          lecciones: [
+            { titulo: 'Big Bang y Origen del Universo', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El Big Bang ocurrió hace 13,800 millones de años. El universo comenzó como un punto infinitamente denso y caliente, y desde entonces se expande y enfría. La radiación de fondo de microondas (CMB) es el eco de ese evento inicial.' },
+            { titulo: 'Materia Oscura y Energía Oscura', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La materia oscura constituye el 27% del universo. No emite luz pero su presencia se detecta por efectos gravitacionales. La energía oscura (68%) causa la expansión acelerada. Juntas forman el 95% del cosmos, pero aún son un misterio.' },
+            { titulo: 'Exoplanetas y Vida Extraterrestre', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Se han descubierto más de 5,000 exoplanetas. El método de tránsito (Kepler) y velocidad radial son los más usados. La zona habitable es donde podría existir agua líquida. Próxima Centauri b y TRAPPIST-1e son candidatos prometedores.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'sistema-solar-db',
+      titulo: 'Sistema Solar',
+      siglas: 'DB',
+      desc: 'Exploración detallada de los cuerpos celestes que componen nuestro sistema solar: planetas, lunas, asteroides, cometas y más.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Planets2013.svg/800px-Planets2013.svg.png',
+      color: '#8b5cf6',
+      modulos: [
+        {
+          titulo: 'El Sol y su Influencia',
+          lecciones: [
+            { titulo: 'Estructura del Sol', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El Sol tiene capas internas (núcleo, zona radiativa, zona convectiva) y atmosféricas (fotosfera, cromosfera, corona). Las manchas solares son regiones más frías en la fotosfera. Las erupciones solares y eyecciones de masa coronal afectan el clima espacial.' },
+            { titulo: 'Viento Solar y Magnetósferas', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El viento solar es un flujo de partículas cargadas que viaja a 400-800 km/s. Protege a los planetas del viento solar mediante sus campos magnéticos. La Tierra tiene una magnetósfera que nos protege y genera auroras boreales.' },
+            { titulo: 'Eclipses y Fenómenos Solares', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Los eclipses solares ocurren cuando la Luna se interpone entre el Sol y la Tierra. Los eclipses lunares ocurren cuando la Tierra se interpone. En 2026 hay un eclipse total de Luna (14 marzo) y uno parcial de Sol (29 marzo).' }
+          ]
+        },
+        {
+          titulo: 'Planetas y sus Lunas',
+          lecciones: [
+            { titulo: 'Mercurio y Venus', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Mercurio es el planeta más pequeño (4,879 km) y más cercano al Sol. Su día dura 59 días terrestres. Venus es similar en tamaño a la Tierra pero tiene atmósfera de CO2, presión 90 veces mayor y temperatura de 462°C. Gira al revés (retrógrado).' },
+            { titulo: 'Tierra y Marte', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La Tierra es el único planeta con agua líquida y vida. Marte tiene el Monte Olimpo (21.9 km) y Valles Marineris (4,000 km). Tiene dos lunas: Fobos y Deimos. El rover Perseverance busca signos de vida desde 2021.' },
+            { titulo: 'Júpiter y Saturno', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Júpiter tiene 95 lunas, incluyendo Ío (volcanes), Europa (océano subterráneo), Ganímedes (mayor luna) y Calisto. Saturno tiene 146 lunas conocidas y anillos de hielo y roca. Titán tiene atmósfera densa y lagos de metano.' },
+            { titulo: 'Urano y Neptuno', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Urano rota de lado (98° inclinación), con 27 lunas. Neptuno tiene vientos de 2,100 km/h y 16 lunas. Tritón, la luna más grande de Neptuno, orbita en dirección opuesta, sugiriendo que fue capturada del cinturón de Kuiper.' }
+          ]
+        },
+        {
+          titulo: 'Cuerpos Menores',
+          lecciones: [
+            { titulo: 'Cinturón de Asteroides', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Entre Marte y Júpiter hay millones de asteroides. Ceres es el más grande (940 km) y es un planeta enano. La NASA visitó Bennu con OSIRIS-REx y Japón visitó Ryugu con Hayabusa2, trayendo muestras a la Tierra.' },
+            { titulo: 'Cometas y Meteoroides', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Los cometas son cuerpos de hielo y polvo del sistema solar exterior. El cometa Halley visita cada 76 años. Los meteoroides son fragmentos rocosos. Al entrar en la atmósfera terrestre, se vuelven meteoros (estrellas fugaces). Si llegan al suelo, son meteoritos.' },
+            { titulo: 'El Cinturón de Kuiper y la Nube de Oort', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Más allá de Neptuno está el cinturón de Kuiper, con Plutón, Haumea, Makemake y Eris como planetas enanos. La Nube de Oort, a 1 año luz del Sol, contiene billones de cometas. Es el límite gravitacional del sistema solar.' }
+          ]
+        }
+      ]
+    }
+  ]
 };
