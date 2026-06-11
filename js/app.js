@@ -170,14 +170,14 @@
     });
 
     $('resetRankingBtn').addEventListener('click', () => {
-      if (confirm('¿Reiniciar todo el ranking?')) {
+      if (confirm('¿Resetear todo el ranking?')) {
         APP.state.ranking = [];
         saveState();
         renderRanking();
       }
     });
     $('resetVisitasBtn').addEventListener('click', () => {
-      if (confirm('¿Reiniciar visitas?')) {
+      if (confirm('¿Resetear visitas?')) {
         APP.state.visitas = { total: 0, hoy: 0, fechaHoy: new Date().toLocaleDateString('es-VE') };
         saveState();
         updateVisitDisplay();
