@@ -134,13 +134,13 @@
   // ==================== THEME ====================
   function initTheme() {
     const btn = $('themeToggle');
-    if (localStorage.getItem('astronomia_theme') === 'dark') {
-      document.body.classList.add('dark-mode');
+    if (localStorage.getItem('astronomia_theme') === 'light') {
+      document.body.classList.add('light-mode');
     }
     btn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      const isDark = document.body.classList.contains('dark-mode');
-      localStorage.setItem('astronomia_theme', isDark ? 'dark' : 'light');
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      localStorage.setItem('astronomia_theme', isLight ? 'light' : 'dark');
     });
   }
 
@@ -403,7 +403,7 @@
     const container = $('sistemaSolarGallery');
     if (!container) return;
     container.innerHTML = APP.state.gallery.map((obj, i) => `
-      <div class="gallery-item" onclick="window.open('${obj.img}','_blank')">
+      <div class="gallery-item" data-gal-img="${obj.img}">
         ${APP.state.isAdmin ? `<div style="position:absolute;top:8px;right:8px;display:flex;gap:4px;z-index:10;">
           <button class="btn btn-xs btn-secondary" data-edit-gal="${i}">✏️</button>
           <button class="btn btn-xs btn-danger" data-del-gal="${i}">✕</button>
@@ -412,6 +412,13 @@
         <div class="caption"><h3>${obj.nombre}</h3><p>${obj.desc}</p></div>
       </div>
     `).join('');
+
+    qsa('.gallery-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const imgUrl = el.dataset.galImg;
+        if (imgUrl) window.open(imgUrl, '_blank');
+      });
+    });
 
     if (APP.state.isAdmin) {
       qsa('[data-edit-gal]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); openGalleryEditor(+b.dataset.editGal); }));
@@ -501,16 +508,23 @@
       const data = await res.json();
       c.innerHTML = `
         <div style="text-align:center;">
-          ${data.media_type === 'image'
-            ? `<img src="${data.url}" style="max-width:100%;border-radius:var(--radius);" loading="lazy">`
-            : `<iframe src="${data.url}" style="width:100%;height:400px;border-radius:var(--radius);border:none;"></iframe>`
-          }
+          <a href="${data.hdurl || data.url}" target="_blank">
+            ${data.media_type === 'image'
+              ? `<img src="${data.url}" style="max-width:100%;border-radius:var(--radius);" loading="lazy">`
+              : `<iframe src="${data.url}" style="width:100%;height:400px;border-radius:var(--radius);border:none;"></iframe>`
+            }
+          </a>
           <h3 style="margin-top:0.75rem;">${data.title}</h3>
           <small style="color:var(--text-secondary);">📅 ${data.date || ''}</small>
           <p style="margin-top:0.5rem;text-align:left;color:var(--text-secondary);font-size:0.9rem;">${data.explanation}</p>
         </div>`;
     } catch (e) {
-      c.innerHTML = '<div class="result-box">⏳ Límite de API alcanzado. Mira la <a href="https://apod.nasa.gov/apod/astropix.html" target="_blank">página oficial</a>.</div>';
+      c.innerHTML = `
+        <div class="result-box">
+          ⏳ Límite de API alcanzado. Mira la
+          <a href="https://apod.nasa.gov/apod/astropix.html" target="_blank">página oficial de la NASA</a>
+          o prueba <a href="https://www.nasa.gov/image-of-the-day/" target="_blank">NASA Image of the Day</a>.
+        </div>`;
     }
   }
 
@@ -631,19 +645,29 @@
     });
     $('calcTelescopioBtn').click();
 
-    $('convertirAstro').addEventListener('click', () => {
+    function convertirUnidades() {
       const ua = +$('ua').value;
-      if (!isNaN(ua)) {
+      if (!isNaN(ua) && ua > 0) {
         const km = ua * 149597870.7;
         const pc = ua / 206264.8;
         const ly = ua / 63241.1;
         $('km').value = km.toExponential(4);
         $('pc').value = pc.toExponential(4);
         $('ly').value = ly.toExponential(4);
-        $('resultConversor').innerHTML = `${ua} UA = ${km.toFixed(0)} km = ${pc.toExponential(4)} pc = ${ly.toExponential(4)} ly`;
+        $('resultConversor').innerHTML = `${ua} UA = ${km.toLocaleString()} km = ${pc.toExponential(4)} pc = ${ly.toExponential(4)} ly`;
       }
+    }
+
+    $('convertirAstro').addEventListener('click', convertirUnidades);
+    ['ua', 'km', 'pc', 'ly'].forEach(id => {
+      $(id).addEventListener('input', () => {
+        if (id === 'ua') convertirUnidades();
+      });
+      $(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') convertirUnidades();
+      });
     });
-    $('convertirAstro').click();
+    setTimeout(convertirUnidades, 100);
 
     $('calcBHBtn').addEventListener('click', () => {
       const M = +$('bhMass').value;

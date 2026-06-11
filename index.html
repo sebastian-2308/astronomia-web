@@ -96,18 +96,29 @@
 
   <div class="card">
     <h2>🌌 Planetario Stellarium</h2>
-    <iframe src="https://stellarium-web.org/" style="width:100%;height:450px;border-radius:var(--radius);border:1px solid var(--border);" loading="lazy" title="Stellarium"></iframe>
+    <div class="iframe-fallback">
+      <iframe src="https://stellarium-web.org/" style="width:100%;height:450px;border-radius:var(--radius);border:1px solid var(--border);" loading="lazy" title="Stellarium" sandbox="allow-scripts allow-same-origin allow-popups" allowfullscreen></iframe>
+      <div class="iframe-fallback-msg">🌌 Si el planetario no carga, visítalo en <a href="https://stellarium-web.org/" target="_blank">stellarium-web.org</a></div>
+    </div>
   </div>
 
   <div class="card">
     <h2>🪐 Sistema Solar 3D</h2>
-    <iframe src="https://www.solarsystemscope.com/" sandbox="allow-scripts allow-same-origin allow-popups" style="width:100%;height:500px;border-radius:var(--radius);border:1px solid var(--border);background:#000;" loading="lazy" title="Solar System Scope"></iframe>
+    <div class="iframe-fallback">
+      <iframe src="https://www.solarsystemscope.com/" sandbox="allow-scripts allow-same-origin allow-popups" style="width:100%;height:500px;border-radius:var(--radius);border:1px solid var(--border);background:#000;" loading="lazy" title="Solar System Scope"></iframe>
+      <div class="iframe-fallback-msg">🪐 Si el sistema solar 3D no carga, visítalo en <a href="https://www.solarsystemscope.com/" target="_blank">solarsystemscope.com</a></div>
+    </div>
   </div>
 
   <div class="card">
     <h2>🌍 Tierra en Vivo</h2>
-    <div style="position:relative;width:100%;padding-bottom:56.25%;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:#000;">
-      <iframe src="https://www.youtube.com/embed/86YLFOog4GM?autoplay=1&mute=1" style="position:absolute;top:0;left:0;width:100%;height:100%;" allow="autoplay;encrypted-media" allowfullscreen loading="lazy" title="NASA ISS Live"></iframe>
+    <div class="earth-live-container">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Earth_Eastern_Hemisphere.jpg" alt="Tierra" loading="lazy">
+      <div class="earth-live-overlay">
+        <p style="font-size:1.1rem;margin-bottom:1rem;color:#fff;">🌍 Observa la Tierra desde la Estación Espacial Internacional</p>
+        <a href="https://www.youtube.com/watch?v=86YLFOog4GM" target="_blank" class="btn btn-primary" style="font-size:1rem;padding:0.8rem 2rem;">▶️ Ver Transmisión en Vivo</a>
+        <p style="margin-top:0.75rem;font-size:0.8rem;color:rgba(255,255,255,0.6);">La transmisión en vivo de la NASA muestra la Tierra vista desde la ISS.</p>
+      </div>
     </div>
   </div>
 
