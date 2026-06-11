@@ -1995,214 +1995,192 @@
 
   // ==================== AULA VIRTUAL ====================
   function initAulaVirtual() {
-    $('enterAulaBtn').addEventListener('click', enterAula);
-    $('studentNameInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') enterAula();
-    });
-    $('logoutStudentBtn').addEventListener('click', logoutAula);
-    $('backToCoursesBtn').addEventListener('click', backToCourses);
+    const studentNameInput = $('studentNameInput');
+    const enterAulaBtn = $('enterAulaBtn');
+    const logoutStudentBtn = $('logoutStudentBtn');
+    const backToCoursesBtn = $('backToCoursesBtn');
+    const coursesContainer = $('coursesContainer');
+    const courseDetailView = $('courseDetailView');
+    const courseDetailContent = $('courseDetailContent');
+    const studentDashboard = $('studentDashboard');
+    const studentLoginCard = $('studentLoginCard');
+    const studentProgress = $('studentProgress');
 
-    const saved = localStorage.getItem('astronomia_student');
-    if (saved) {
+    let currentStudent = null;
+    let completedLessons = {};
+
+    function loadStudent() {
       try {
-        APP.state.student = JSON.parse(saved);
-        showStudentPanel();
-      } catch (e) {
-        localStorage.removeItem('astronomia_student');
+        const saved = localStorage.getItem('aulaStudent');
+        if (saved) currentStudent = saved;
+        const completed = localStorage.getItem('aulaCompleted');
+        if (completed) completedLessons = JSON.parse(completed);
+      } catch(e) {}
+    }
+
+    function saveStudent() {
+      localStorage.setItem('aulaStudent', currentStudent || '');
+      localStorage.setItem('aulaCompleted', JSON.stringify(completedLessons));
+    }
+
+    function updateUI() {
+      if (currentStudent) {
+        studentLoginCard.style.display = 'none';
+        studentDashboard.style.display = 'block';
+        const totalLessons = DATA.cursosVirtuales.reduce((sum, c) => sum + c.modulos.reduce((s, m) => s + m.lecciones.length, 0), 0);
+        const completedCount = Object.keys(completedLessons).length;
+        const pct = totalLessons > 0 ? Math.round(completedCount / totalLessons * 100) : 0;
+        studentProgress.innerHTML = `👋 Bienvenido, <strong>${currentStudent}</strong>! · Progreso: ${completedCount}/${totalLessons} lecciones (${pct}%)`;
+      } else {
+        studentLoginCard.style.display = 'block';
+        studentDashboard.style.display = 'none';
       }
     }
-    renderCourses();
-  }
 
-  function enterAula() {
-    const name = $('studentNameInput').value.trim();
-    if (!name) { showToast('✏️ Ingresa tu nombre', 'error'); return; }
-    APP.state.student = { nombre: name, progreso: {} };
-    localStorage.setItem('astronomia_student', JSON.stringify(APP.state.student));
-    showStudentPanel();
-    showToast(`👋 Bienvenido, ${name}!`, 'success');
-  }
+    function renderCourses() {
+      coursesContainer.style.display = 'block';
+      courseDetailView.style.display = 'none';
 
-  function logoutAula() {
-    APP.state.student = null;
-    localStorage.removeItem('astronomia_student');
-    $('studentDashboard').style.display = 'none';
-    $('studentLoginCard').style.display = 'block';
-    backToCourses();
-    showToast('👋 Sesión cerrada', 'info');
-  }
-
-  function showStudentPanel() {
-    const s = APP.state.student;
-    if (!s) { $('studentDashboard').style.display = 'none'; $('studentLoginCard').style.display = 'block'; return; }
-    $('studentLoginCard').style.display = 'none';
-    $('studentDashboard').style.display = 'block';
-    const totalLecciones = DATA.cursosVirtuales.reduce((acc, c) => acc + c.modulos.reduce((a, m) => a + m.lecciones.length, 0), 0);
-    const completadas = Object.values(s.progreso).filter(v => v).length;
-    const pct = totalLecciones > 0 ? Math.round(completadas / totalLecciones * 100) : 0;
-
-    $('studentProgress').innerHTML = `
-      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem;">
-        <span><strong>${s.nombre}</strong></span>
-        <span>📚 Progreso: <strong>${completadas}/${totalLecciones}</strong> lecciones</span>
-      </div>
-      <div class="progress-bar" style="margin:0.3rem 0;">
-        <div class="progress-fill" style="width:${pct}%;"></div>
-      </div>
-      <small style="color:var(--text-secondary);">${pct}% completado</small>
-    `;
-  }
-
-  function renderCourses() {
-    const container = $('coursesContainer');
-    if (!container) return;
-    container.innerHTML = `
-      <div class="card">
-        <h2>📖 Cursos Disponibles</h2>
-        <div class="courses-grid">
-          ${DATA.cursosVirtuales.map((c, i) => `
-            <div class="course-card" data-course="${i}" style="--course-color:${c.color};">
-              <div class="course-card-img" style="background-image:url('${c.img}');"></div>
-              <div class="course-card-body">
-                <span class="course-badge" style="background:${c.color};">${c.siglas}</span>
-                <h3>${c.titulo}</h3>
-                <small style="color:var(--text-secondary);">👨‍🏫 ${c.profesor}</small>
-                <p>${c.desc}</p>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem;">
-                  <small style="color:var(--text-secondary);">${c.modulos.length} módulos · ${c.modulos.reduce((a, m) => a + m.lecciones.length, 0)} lecciones</small>
-                  <span style="font-size:1.2rem;">→</span>
-                </div>
-              </div>
+      let html = '<div class="aula-courses-grid">';
+      DATA.cursosVirtuales.forEach(curso => {
+        const totalLecciones = curso.modulos.reduce((s, m) => s + m.lecciones.length, 0);
+        const completedCount = curso.modulos.reduce((s, m) => s + m.lecciones.filter(l => completedLessons[curso.id + '-' + l.titulo]).length, 0);
+        html += `<div class="aula-course-card" data-course-id="${curso.id}" style="--course-color:${curso.color};">
+          <div class="aula-course-img" style="background-image:url('${curso.img}');">
+            <span class="aula-course-badge">${curso.siglas}</span>
+          </div>
+          <div class="aula-course-body">
+            <h4>${curso.titulo}</h4>
+            <div class="aula-course-teacher">👨‍🏫 ${curso.profesor}</div>
+            <div class="aula-course-desc">${curso.desc}</div>
+            <div style="margin-top:0.75rem;font-size:0.8rem;color:var(--text-secondary);">
+              ${totalLecciones} lecciones · ${completedCount} completadas
             </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-
-    qsa('.course-card').forEach(el => {
-      el.addEventListener('click', () => openCourse(+el.dataset.course));
-    });
-  }
-
-  function openCourse(index) {
-    const course = DATA.cursosVirtuales[index];
-    if (!course) return;
-    APP.state.currentCourse = index;
-    $('coursesContainer').style.display = 'none';
-    $('courseDetailView').style.display = 'block';
-
-    const s = APP.state.student;
-    let content = `
-      <div class="card">
-        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
-          <div style="flex-shrink:0;width:100%;max-width:300px;border-radius:var(--radius);overflow:hidden;">
-            <img src="${course.img}" alt="${course.titulo}" style="width:100%;height:180px;object-fit:cover;border-radius:var(--radius);">
           </div>
-          <div style="flex:1;">
-            <span class="course-badge" style="background:${course.color};">${course.siglas}</span>
-            <h2 style="margin:0.5rem 0;">${course.titulo}</h2>
-            <p style="color:var(--text-secondary);margin-bottom:0.25rem;">${course.desc}</p>
-            <small style="color:var(--text-secondary);">👨‍🏫 Profesor: ${course.profesor}</small>
-          </div>
-        </div>
-      </div>
-      ${course.modulos.map((mod, mi) => `
-        <div class="card modulo-card">
-          <h3 style="display:flex;align-items:center;gap:0.5rem;">
-            <span>📦 ${mod.titulo}</span>
-            <span class="course-badge" style="background:${course.color};font-size:0.65rem;">${mod.lecciones.length} lecciones</span>
-          </h3>
-          <div class="lecciones-list">
-            ${mod.lecciones.map((lec, li) => {
-              const key = `${course.id}-${mi}-${li}`;
-              const done = s && s.progreso && s.progreso[key];
-              return `
-                <div class="leccion-item ${done ? 'completed' : ''}" data-leccion="${key}" data-mi="${mi}" data-li="${li}">
-                  <div class="leccion-status">${done ? '✅' : '📄'}</div>
-                  <div class="leccion-info">
-                    <strong>${lec.titulo}</strong>
-                    <small style="color:var(--text-secondary);">${done ? 'Completada' : 'Pendiente'}</small>
-                  </div>
-                  <span style="color:var(--accent);font-size:0.85rem;">▶</span>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `).join('')}
-    `;
-
-    $('courseDetailContent').innerHTML = content;
-
-    qsa('.leccion-item').forEach(el => {
-      el.addEventListener('click', () => {
-        openLeccion(course, +el.dataset.mi, +el.dataset.li);
+        </div>`;
       });
-    });
-  }
+      html += '</div>';
+      html += '<div style="margin-top:2rem;text-align:center;"><a href="https://campusvirtual.fundacite-caracas.com" target="_blank" class="btn btn-primary" rel="noopener">🌐 Ir al Campus Virtual</a></div>';
+      coursesContainer.innerHTML = html;
+      updateUI();
 
-  function openLeccion(course, mi, li) {
-    const mod = course.modulos[mi];
-    const lec = mod.lecciones[li];
-    const key = `${course.id}-${mi}-${li}`;
+      document.querySelectorAll('.aula-course-card').forEach(card => {
+        card.addEventListener('click', () => renderCourseDetail(card.dataset.courseId));
+      });
+    }
 
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay open';
-    overlay.id = 'leccionModal';
-    overlay.innerHTML = `
-      <div class="modal-box leccion-modal-box">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
-          <div>
-            <small style="color:var(--text-secondary);">${course.titulo} › ${mod.titulo}</small>
-            <h2 style="margin-top:0.25rem;">${lec.titulo}</h2>
+    function renderCourseDetail(courseId) {
+      const curso = DATA.cursosVirtuales.find(c => c.id === courseId);
+      if (!curso) return renderCourses();
+      coursesContainer.style.display = 'none';
+      courseDetailView.style.display = 'block';
+
+      let html = `<h2 style="margin-bottom:0.5rem;">${curso.titulo}</h2>
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">👨‍🏫 ${curso.profesor} · ${curso.modulos.reduce((s,m) => s + m.lecciones.length, 0)} lecciones</p>`;
+
+      curso.modulos.forEach(mod => {
+        const modCompleted = mod.lecciones.filter(l => completedLessons[curso.id + '-' + l.titulo]).length;
+        html += `<div class="modulo-card card" style="margin-bottom:1rem;">
+          <h3 style="margin-bottom:0.25rem;">${mod.titulo}</h3>
+          <div style="font-size:0.8rem;color:var(--text-secondary);">${modCompleted}/${mod.lecciones.length} completado</div>
+          <div class="lecciones-list">`;
+        mod.lecciones.forEach(lec => {
+          const key = curso.id + '-' + lec.titulo;
+          const done = completedLessons[key];
+          html += `<div class="leccion-item${done ? ' completed' : ''}" data-course="${curso.id}" data-titulo="${lec.titulo.replace(/"/g, '&quot;')}">
+            <span class="leccion-status">${done ? '✅' : '📖'}</span>
+            <div class="leccion-info">
+              <strong>${lec.titulo}</strong>
+              <span style="font-size:0.75rem;color:var(--text-secondary);">${lec.texto.substring(0, 100)}...</span>
+            </div>
+          </div>`;
+        });
+        html += '</div></div>';
+      });
+
+      courseDetailContent.innerHTML = html;
+      updateUI();
+
+      document.querySelectorAll('.leccion-item').forEach(item => {
+        item.addEventListener('click', () => {
+          playLeccion(item.dataset.course, item.dataset.titulo);
+        });
+      });
+    }
+
+    function playLeccion(courseId, titulo) {
+      const curso = DATA.cursosVirtuales.find(c => c.id === courseId);
+      if (!curso) return;
+      let leccion = null;
+      curso.modulos.forEach(m => m.lecciones.forEach(l => { if (l.titulo === titulo) leccion = l; }));
+      if (!leccion) return;
+
+      const key = courseId + '-' + titulo;
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay open';
+      overlay.innerHTML = `
+        <div class="modal-box leccion-modal-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h3 style="margin:0;">${leccion.titulo}</h3>
+            <button class="btn btn-sm btn-secondary leccion-close">✕</button>
           </div>
-          <button class="btn btn-sm btn-secondary" id="closeLeccionBtn">✕</button>
-        </div>
-        <div style="aspect-ratio:16/9;background:#000;border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;">
-          <div id="youtube-player" style="width:100%;height:100%;"></div>
-        </div>
-        <div style="background:var(--bg-card);padding:1rem;border-radius:var(--radius);margin-bottom:1rem;max-height:200px;overflow-y:auto;font-size:0.9rem;line-height:1.7;">
-          ${lec.texto}
-        </div>
-        <div class="modal-actions">
-          <button class="btn btn-secondary" id="closeLeccionBtn2">Cerrar</button>
-          <button class="btn btn-primary" id="markCompleteBtn">${APP.state.student && APP.state.student.progreso && APP.state.student.progreso[key] ? '✅ Completada' : 'Marcar como completada'}</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
+          <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius-sm);margin-bottom:1rem;">
+            <iframe src="${leccion.video}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.6;">${leccion.texto}</p>
+          <div style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button class="btn btn-primary mark-completed-btn">${completedLessons[key] ? '✅ Completada' : 'Marcar como completada'}</button>
+            <button class="btn btn-secondary leccion-close">Cerrar</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
 
-    const playerDiv = overlay.querySelector('#youtube-player');
-    const videoId = lec.video.split('/embed/')[1];
-    playerDiv.innerHTML = `
-      <iframe src="https://www.youtube-nocookie.com/embed/${videoId}" style="width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
-      <div style="position:absolute;bottom:0;left:0;right:0;text-align:center;padding:0.5rem;z-index:3;">
-        <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" style="color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;">▶ Ver en YouTube si no carga</a>
-      </div>
-    `; playerDiv.style.position = 'relative';
+      overlay.querySelector('.mark-completed-btn').addEventListener('click', function() {
+        completedLessons[key] = true;
+        saveStudent();
+        this.textContent = '✅ Completada';
+        renderCourseDetail(courseId);
+        updateUI();
+        showToast('✅ Lección marcada como completada', 'success');
+      });
 
-    const close = () => { overlay.remove(); showStudentPanel(); };
-    overlay.querySelector('#closeLeccionBtn').addEventListener('click', close);
-    overlay.querySelector('#closeLeccionBtn2').addEventListener('click', close);
+      overlay.querySelectorAll('.leccion-close').forEach(btn => {
+        btn.addEventListener('click', () => overlay.remove());
+      });
 
-    overlay.querySelector('#markCompleteBtn').addEventListener('click', () => {
-      if (!APP.state.student) { showToast('🔑 Identifícate primero', 'error'); return; }
-      if (!APP.state.student.progreso) APP.state.student.progreso = {};
-      APP.state.student.progreso[key] = true;
-      localStorage.setItem('astronomia_student', JSON.stringify(APP.state.student));
-      showToast(`✅ "${lec.titulo}" completada!`, 'success');
-      close();
-      openCourse(APP.state.currentCourse);
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) overlay.remove();
+      });
+    }
+
+    enterAulaBtn.addEventListener('click', () => {
+      const name = studentNameInput.value.trim();
+      if (!name) { showToast('⚠️ Ingresa tu nombre', 'warning'); return; }
+      currentStudent = name;
+      saveStudent();
+      updateUI();
+      renderCourses();
+      showToast(`👋 Bienvenido, ${name}!`, 'success');
     });
 
-    overlay.addEventListener('click', e => {
-      if (e.target === overlay) close();
+    studentNameInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') enterAulaBtn.click();
     });
-  }
 
-  function backToCourses() {
-    $('courseDetailView').style.display = 'none';
-    $('coursesContainer').style.display = 'block';
+    logoutStudentBtn.addEventListener('click', () => {
+      currentStudent = null;
+      completedLessons = {};
+      saveStudent();
+      updateUI();
+      renderCourses();
+      showToast('👋 Sesión cerrada', 'info');
+    });
+
+    backToCoursesBtn.addEventListener('click', renderCourses);
+
+    loadStudent();
+    renderCourses();
+    updateUI();
   }
 
   // ==================== KEYBOARD SHORTCUTS ====================
@@ -2300,13 +2278,13 @@
     initQuiz();
     initGame();
     initConstellations();
+    initAulaVirtual();
     initSpaceHistory();
     initRandomSpace();
     initFacts();
     initKeyboard();
     initSearch();
     initBackToTop();
-    initAulaVirtual();
 
     renderPlanetGrid();
     renderComparison();
@@ -2335,3 +2313,4 @@
   })();
 
 })();
+
