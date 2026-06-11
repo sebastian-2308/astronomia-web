@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg-primary: #0a0e1a;
   --bg-secondary: #111827;
   --bg-card: #1a2332;
@@ -55,6 +55,99 @@ body.light-mode {
   --gradient-hero: linear-gradient(135deg, #e0e7ff 0%, #f0f4f8 50%, #e2e8f0 100%);
   --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.95) 100%);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+body.light-mode .header-bar {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom-color: var(--border);
+}
+
+body.light-mode .tabs-bar {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+body.light-mode .tab-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .tab-btn.active {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+body.light-mode .hero::before {
+  background: radial-gradient(ellipse at 30% 50%, rgba(37, 99, 235, 0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 50%, rgba(37, 99, 235, 0.04) 0%, transparent 60%);
+}
+
+body.light-mode .hero-badge {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+body.light-mode .hero h1 {
+  background: linear-gradient(135deg, var(--accent-light), var(--bg-primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .card:hover {
+  box-shadow: var(--shadow-card), 0 0 20px rgba(37, 99, 235, 0.05);
+}
+
+body.light-mode .result-box {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: rgba(37, 99, 235, 0.15);
+}
+
+body.light-mode .canvas-container {
+  background: #e2e8f0;
+  border-color: var(--border);
+}
+
+body.light-mode .planet-stat {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+body.light-mode .ranking-list li.champion {
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.08), transparent);
+}
+
+body.light-mode .question-option:hover {
+  background: rgba(37, 99, 235, 0.04);
+}
+
+body.light-mode .question-option.selected {
+  border-color: var(--accent);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+body.light-mode .question-option.correct {
+  border-color: var(--success);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+body.light-mode .question-option.wrong {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+body.light-mode .comparison-table tr:hover td {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+body.light-mode .space-object-card {
+  background: linear-gradient(135deg, #e8edf5, #f0f4f8);
+}
+
+body.light-mode .chat-msg.bot {
+  background: var(--bg-card-hover);
+}
+
+body.light-mode .game-hud > div {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--border);
+  color: var(--text-primary);
 }
 
 a { color: var(--accent); text-decoration: none; transition: var(--transition); }
@@ -804,3 +897,4 @@ canvas { max-width: 100%; height: auto; display: block; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .detail-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
