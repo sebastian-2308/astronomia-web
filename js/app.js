@@ -74,11 +74,7 @@
         if (data.gameRanking) APP.state.gameRanking = data.gameRanking;
         if (data.news) APP.state.news = data.news;
         if (data.visitas) APP.state.visitas = data.visitas;
-        if (data.gallery) {
-          const baseLen = DATA.galeria.length;
-          const extras = data.gallery.slice(baseLen);
-          APP.state.gallery = [...DATA.galeria, ...extras];
-        }
+        if (data.gallery) APP.state.gallery = data.gallery;
         if (data.facts) APP.state.facts = data.facts;
         if (data.efemerides) APP.state.efemerides = data.efemerides;
       }
