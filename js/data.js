@@ -252,12 +252,12 @@ const DATA = {
   cursosVirtuales: [
     {
       id: 'astronomia-dp',
-      titulo: 'Astronomía General',
+      titulo: 'ASTRONOMÍA-DP',
       siglas: 'DP',
-      desc: 'Curso introductorio de astronomía con el objetivo de divulgar y fomentar el interés en ella. Incluye telescopios, coordenadas, constelaciones, Sistema Solar, estrellas, galaxias y leyes de Kepler.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Hubble_ultra_deep_field_high_rez_edit1.jpg/800px-Hubble_ultra_deep_field_high_rez_edit1.jpg',
+      desc: 'Curso introductorio de astronomía con el objetivo de divulgar y fomentar el interés en ella. Incluye telescopios e instrumentos de medición, medidas de posicionamiento terrestre y celeste, constelaciones, La Tierra y La Luna, el Sistema Solar, el Sol y las estrellas, nebulosas y galaxias, teorías del origen del Universo y leyes de Kepler.',
+      img: 'https://campusvirtual.fundacite-caracas.com/pluginfile.php/463/course/overviewfiles/telescope-870x563.jpg',
       color: '#2563eb',
-      profesor: 'Diego Peña',
+      profesor: 'Diego Peña (DIEGO PENA)',
       modulos: [
         {
           titulo: 'Telescopios e Instrumentos de Medición',
@@ -336,12 +336,12 @@ const DATA = {
     },
     {
       id: 'astronomia-db',
-      titulo: 'Astronomía de Cielo Profundo',
+      titulo: 'ASTRONOMÍA-DB',
       siglas: 'DB',
       desc: 'Exploración detallada de objetos de cielo profundo: estrellas binarias, cúmulos estelares, nebulosas, galaxias y técnicas avanzadas de observación astronómica.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg/800px-Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg',
+      img: 'https://campusvirtual.fundacite-caracas.com/pluginfile.php/438/course/overviewfiles/001-1.jpg',
       color: '#8b5cf6',
-      profesor: 'Diego Blanco',
+      profesor: 'Diego Blanco (DIEGO SAMUEL BLANCO ESPAA)',
       modulos: [
         {
           titulo: 'Estrellas Binarias y Múltiples',
