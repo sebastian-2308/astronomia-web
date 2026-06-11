@@ -2065,6 +2065,7 @@
               <div class="course-card-body">
                 <span class="course-badge" style="background:${c.color};">${c.siglas}</span>
                 <h3>${c.titulo}</h3>
+                <small style="color:var(--text-secondary);">👨‍🏫 ${c.profesor}</small>
                 <p>${c.desc}</p>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem;">
                   <small style="color:var(--text-secondary);">${c.modulos.length} módulos · ${c.modulos.reduce((a, m) => a + m.lecciones.length, 0)} lecciones</small>
@@ -2099,7 +2100,8 @@
           <div style="flex:1;">
             <span class="course-badge" style="background:${course.color};">${course.siglas}</span>
             <h2 style="margin:0.5rem 0;">${course.titulo}</h2>
-            <p style="color:var(--text-secondary);">${course.desc}</p>
+            <p style="color:var(--text-secondary);margin-bottom:0.25rem;">${course.desc}</p>
+            <small style="color:var(--text-secondary);">👨‍🏫 Profesor: ${course.profesor}</small>
           </div>
         </div>
       </div>

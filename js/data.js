@@ -254,75 +254,117 @@ const DATA = {
       id: 'astronomia-dp',
       titulo: 'Astronomía General',
       siglas: 'DP',
-      desc: 'Descubriendo el Universo: desde los fundamentos de la observación astronómica hasta los misterios de la cosmología moderna.',
+      desc: 'Curso introductorio de astronomía con el objetivo de divulgar y fomentar el interés en ella. Incluye telescopios, coordenadas, constelaciones, Sistema Solar, estrellas, galaxias y leyes de Kepler.',
       img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Hubble_ultra_deep_field_high_rez_edit1.jpg/800px-Hubble_ultra_deep_field_high_rez_edit1.jpg',
       color: '#2563eb',
+      profesor: 'Diego Peña',
       modulos: [
         {
-          titulo: 'Introducción a la Astronomía',
+          titulo: 'Telescopios e Instrumentos de Medición',
           lecciones: [
-            { titulo: '¿Qué es la Astronomía?', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La astronomía es la ciencia que estudia los cuerpos celestes del universo: planetas, estrellas, galaxias y más. Es una de las ciencias más antiguas, con raíces en las civilizaciones babilónica, griega, china y maya. Hoy combina observación telescópica, física teórica y exploración espacial para comprender el cosmos.' },
-            { titulo: 'Historia de la Astronomía', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Desde las primeras observaciones a simple vista hasta el telescopio espacial James Webb, la astronomía ha evolucionado enormemente. Copérnico, Galileo, Kepler y Newton sentaron las bases. En el siglo XX, Hubble descubrió la expansión del universo, y hoy exploramos exoplanetas y agujeros negros.' },
-            { titulo: 'Instrumentos de Observación', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Los telescopios son la herramienta principal del astrónomo. Hay telescopios refractores (lentes), reflectores (espejos) y radiotelescopios. El Hubble orbita la Tierra desde 1990, y el James Webb, lanzado en 2021, observa el universo infrarrojo desde el punto L2.' }
+            { titulo: 'Tipos de Telescopios', video: 'https://www.youtube.com/embed/d_NT7jRwmoY', texto: 'Los telescopios son instrumentos diseñados para observar objetos lejanos mediante la captación de radiación electromagnética. Existen tres tipos principales: refractores (usan lentes), reflectores (usan espejos) y catadióptricos (combinación de ambos). Cada tipo tiene ventajas según el uso: los refractores son ideales para observación lunar y planetaria, mientras que los reflectores destacan en la observación de objetos de cielo profundo como nebulosas y galaxias.' },
+            { titulo: 'Partes y Funcionamiento', video: 'https://www.youtube.com/embed/d_NT7jRwmoY', texto: 'Un telescopio se compone de: objetivo (lente o espejo principal que capta la luz), ocular (amplía la imagen formada por el objetivo), buscador (pequeño telescopio de bajo aumento para localizar objetos), montura (soporte que permite el movimiento) y trípode. La montura puede ser altacimutal (movimiento vertical y horizontal) o ecuatorial (alineada con el eje terrestre para seguir estrellas).' },
+            { titulo: 'Instrumentos de Medición Astronómica', video: 'https://www.youtube.com/embed/d_NT7jRwmoY', texto: 'Además de los telescopios ópticos, los astrónomos usan: radiotelescopios (captan ondas de radio), espectrógrafos (descomponen la luz para analizar composición química), fotómetros (miden brillo), CCDs (cámaras digitales de alta sensibilidad) y coronógrafos (bloquean la luz estelar para observar objetos débiles cercanos).' }
+          ]
+        },
+        {
+          titulo: 'Medidas de Posicionamiento',
+          lecciones: [
+            { titulo: 'Coordenadas Terrestres', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Para ubicarnos en la Tierra usamos latitud (distancia angular al ecuador) y longitud (distancia angular al meridiano de Greenwich). La latitud es fundamental en astronomía: desde el ecuador se ven ambas esferas celestes, desde los polos solo una. El observador en Caracas (10.5°N) tiene una perspectiva privilegiada del cielo.' },
+            { titulo: 'Coordenadas Celestes', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Para ubicar estrellas usamos: ascensión recta (equivalente a longitud terrestre, medida en horas, minutos y segundos) y declinación (equivalente a latitud). También existe el sistema horizontal con azimut y altura. El movimiento aparente de las estrellas se debe a la rotación terrestre: 15° por hora hacia el oeste.' },
+            { titulo: 'Movimiento Aparente del Cielo', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La esfera celeste parece girar de este a oeste debido a la rotación terrestre. Las estrellas circumpolares nunca se ocultan cerca de los polos. El Sol sigue la eclíptica, inclinada 23.5° respecto al ecuador celeste, causando las estaciones. La precesión de los equinoccios cambia lentamente la orientación del eje terrestre cada 26,000 años.' }
+          ]
+        },
+        {
+          titulo: 'Constelaciones',
+          lecciones: [
+            { titulo: 'Historia y Origen de las Constelaciones', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las constelaciones son agrupaciones aparentes de estrellas que forman figuras imaginarias. Fueron nombradas por civilizaciones antiguas: griegos, romanos, babilonios y árabes. La Unión Astronómica Internacional reconoce oficialmente 88 constelaciones que cubren toda la esfera celeste. Cada una tiene límites precisos.' },
+            { titulo: 'Constelaciones del Hemisferio Norte', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las más conocidas son: Osa Mayor (con el Carro, apunta a la Estrella Polar), Osa Menor (contiene la Estrella Polar), Casiopea (forma de W), Orión (visible en invierno, con Betelgeuse y Rigel), Leo, Virgo y Escorpión. La Estrella Polar marca el norte y parece fija en el cielo.' },
+            { titulo: 'Constelaciones del Hemisferio Sur', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Desde Venezuela también vemos constelaciones australes como: Cruz del Sur (la más famosa, aparece en banderas de Australia y Brasil), Centauro (con Alfa Centauri, la estrella más cercana), Carina (con Canopus, la segunda más brillante) y Escorpión (visible en las noches de invierno).' }
+          ]
+        },
+        {
+          titulo: 'La Tierra y la Luna',
+          lecciones: [
+            { titulo: 'La Tierra: Nuestro Planeta', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La Tierra es el tercer planeta del Sistema Solar, con un diámetro de 12,756 km. Tiene una atmósfera rica en nitrógeno y oxígeno que protege la vida. Su campo magnético nos protege del viento solar. El 71% de su superficie está cubierta por agua. Es el único planeta conocido con vida. Su rotación dura 24 horas y su traslación 365.25 días.' },
+            { titulo: 'La Luna: Nuestro Satélite Natural', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La Luna tiene un diámetro de 3,474 km y está a 384,400 km de distancia. Su superficie tiene mares (planicies de lava solidificada), cráteres de impacto y montañas. No tiene atmósfera ni agua líquida. La cara oculta de la Luna fue fotografiada por primera vez en 1959 por la sonda soviética Luna 3.' },
+            { titulo: 'Fases Lunares y Eclipses', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las fases lunares son: Luna Nueva, Cuarto Creciente, Luna Llena y Cuarto Menguante. El ciclo completo dura 29.5 días. Los eclipses lunares ocurren cuando la Tierra se interpone entre el Sol y la Luna. Los eclipses solares ocurren cuando la Luna se interpone entre el Sol y la Tierra. En 2026 hay un eclipse total de Luna (14 marzo).' }
           ]
         },
         {
           titulo: 'El Sistema Solar',
           lecciones: [
-            { titulo: 'El Sol: Nuestra Estrella', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El Sol contiene el 99.86% de toda la masa del sistema solar. Es una estrella de tipo G2V, de color amarillo-blanca. Su energía proviene de la fusión nuclear de hidrógeno en helio en su núcleo, donde la temperatura alcanza los 15 millones de grados Celsius.' },
-            { titulo: 'Los Planetas Terrestres', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Mercurio, Venus, Tierra y Marte son los planetas rocosos. La Tierra es el único con vida conocida. Venus es el más caliente (462°C) por su efecto invernadero. Marte tiene el volcán más grande: el Monte Olimpo, 2.5 veces más alto que el Everest.' },
-            { titulo: 'Los Gigantes Gaseosos', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Júpiter, Saturno, Urano y Neptuno son planetas gigantes. Júpiter es el más grande y tiene la Gran Mancha Roja, una tormenta mayor que la Tierra. Saturno es famoso por sus anillos. Urano rota de lado. Neptuno tiene vientos supersónicos de 2,100 km/h.' }
+            { titulo: 'Estructura del Sistema Solar', video: 'https://www.youtube.com/embed/V_qzJLWnqik', texto: 'El Sistema Solar está formado por el Sol y todos los cuerpos que orbitan a su alrededor: 8 planetas, 5 planetas enanos, cientos de lunas, millones de asteroides y billones de cometas. Se divide en sistema solar interior (planetas rocosos) y exterior (gigantes gaseosos). El límite gravitacional del Sol alcanza la Nube de Oort, a 1 año luz.' },
+            { titulo: 'Planetas Interiores', video: 'https://www.youtube.com/embed/V_qzJLWnqik', texto: 'Mercurio (diámetro 4,879 km, sin atmósfera, temperaturas de -180°C a 430°C), Venus (12,104 km, atmósfera de CO2, 462°C, gira al revés), Tierra (12,756 km, 71% agua, única con vida), Marte (6,792 km, atmósfera delgada, tiene el Monte Olimpo y Valles Marineris). Entre Marte y Júpiter está el cinturón de asteroides.' },
+            { titulo: 'Planetas Exteriores', video: 'https://www.youtube.com/embed/V_qzJLWnqik', texto: 'Júpiter (142,984 km, el más grande, Gran Mancha Roja, 95 lunas), Saturno (120,536 km, famoso por anillos de hielo, 146 lunas), Urano (51,118 km, rota de lado, 27 lunas), Neptuno (49,528 km, vientos de 2,100 km/h, 16 lunas). Plutón fue reclasificado como planeta enano en 2006.' }
           ]
         },
         {
-          titulo: 'Estrellas y Galaxias',
+          titulo: 'El Sol, las Estrellas y su Clasificación',
           lecciones: [
-            { titulo: 'Nacimiento y Muerte de las Estrellas', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las estrellas nacen en nebulosas, colapsando nubes de gas y polvo. Su vida depende de su masa: las pequeñas como el Sol viven ~10 mil millones de años; las masivas viven millones y mueren en supernovas, dejando estrellas de neutrones o agujeros negros.' },
-            { titulo: 'Tipos de Galaxias', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Hay galaxias espirales (como la Vía Láctea), elípticas (como M87) e irregulares (como las Nubes de Magallanes). Nuestra galaxia tiene entre 100 y 400 mil millones de estrellas. La galaxia más cercana es Andrómeda, a 2.5 millones de años luz.' },
-            { titulo: 'El Universo en Expansión', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Edwin Hubble descubrió en 1929 que el universo se expande: las galaxias se alejan unas de otras. Esto llevó a la teoría del Big Bang. Hoy sabemos que la expansión se acelera por la energía oscura, que constituye el 68% del universo.' }
+            { titulo: 'El Sol: Nuestra Estrella', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El Sol es una estrella de tipo espectral G2V, de color amarillo-blanca. Contiene el 99.86% de toda la masa del sistema solar. Su núcleo alcanza 15 millones de grados Celsius, donde ocurre la fusión nuclear de hidrógeno en helio. Su energía tarda 8 minutos en llegar a la Tierra. Tiene un diámetro de 1,391,000 km.' },
+            { titulo: 'Clasificación Espectral Estelar', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las estrellas se clasifican por tipo espectral: O (azules, muy calientes >30,000K), B (azul-blancas), A (blancas), F (amarillo-blancas), G (amarillas como el Sol, 5,500K), K (naranjas) y M (rojas, más frías <3,500K). La regla mnemotécnica es: "Oh, Be A Fine Girl/Guy, Kiss Me". También se clasifican por luminosidad (I a V).' },
+            { titulo: 'Ciclo de Vida Estelar', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las estrellas nacen en nebulosas. Su evolución depende de la masa inicial: estrellas como el Sol se convierten en gigantes rojas y terminan como enanas blancas. Estrellas masivas (>8 masas solares) explotan como supernovas, dejando estrellas de neutrones o agujeros negros. Las estrellas más masivas pueden formar agujeros negros.' }
           ]
         },
         {
-          titulo: 'Cosmología Moderna',
+          titulo: 'Nebulosas y Galaxias',
           lecciones: [
-            { titulo: 'Big Bang y Origen del Universo', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El Big Bang ocurrió hace 13,800 millones de años. El universo comenzó como un punto infinitamente denso y caliente, y desde entonces se expande y enfría. La radiación de fondo de microondas (CMB) es el eco de ese evento inicial.' },
-            { titulo: 'Materia Oscura y Energía Oscura', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La materia oscura constituye el 27% del universo. No emite luz pero su presencia se detecta por efectos gravitacionales. La energía oscura (68%) causa la expansión acelerada. Juntas forman el 95% del cosmos, pero aún son un misterio.' },
-            { titulo: 'Exoplanetas y Vida Extraterrestre', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Se han descubierto más de 5,000 exoplanetas. El método de tránsito (Kepler) y velocidad radial son los más usados. La zona habitable es donde podría existir agua líquida. Próxima Centauri b y TRAPPIST-1e son candidatos prometedores.' }
+            { titulo: 'Nebulosas: Viveros Estelares', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las nebulosas son nubes de gas y polvo interestelar. Pueden ser: de emisión (brillan por radiación ultravioleta de estrellas cercanas, como la Nebulosa de Orión), de reflexión (reflejan luz estelar, azuladas), oscuras (bloquean la luz, como la Cabeza de Caballo) y planetarias (restos de estrellas como el Sol).' },
+            { titulo: 'Tipos de Galaxias', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las galaxias se clasifican en: espirales (como la Vía Láctea, con brazos curvos), elípticas (como M87, sin estructura definida), espirales barradas (como la Vía Láctea, con una barra central) e irregulares (como las Nubes de Magallanes). La Vía Láctea tiene entre 100 y 400 mil millones de estrellas.' },
+            { titulo: 'La Vía Láctea y Andrómeda', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La Vía Láctea es una galaxia espiral barrada con un diámetro de 100,000 años luz. Nuestro Sistema Solar orbita su centro a 250 km/s, completando una vuelta cada 230 millones de años. Andrómeda (M31), nuestra galaxia vecina, está a 2.5 millones de años luz. Colisionará con la Vía Láctea en unos 4.5 mil millones de años.' }
+          ]
+        },
+        {
+          titulo: 'Teorías del Origen del Universo',
+          lecciones: [
+            { titulo: 'El Big Bang', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La teoría del Big Bang propone que el universo comenzó hace 13,800 millones de años a partir de un estado infinitamente denso y caliente. Georges Lemaître propuso la idea en 1927. Edwin Hubble confirmó la expansión en 1929. La radiación de fondo de microondas (CMB), descubierta en 1965, es la prueba más sólida de esta teoría.' },
+            { titulo: 'Evolución del Universo Temprano', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'En los primeros 3 minutos se formaron protones y neutrones. A los 380,000 años, el universo se enfrió lo suficiente para formar átomos neutros (recombinación), liberando la radiación CMB. Luego vinieron las "edades oscuras" hasta que las primeras estrellas y galaxias se formaron unos 400 millones de años después del Big Bang.' },
+            { titulo: 'El Futuro del Universo', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Hay tres escenarios posibles: Big Crunch (el universo deja de expandirse y colapsa), Big Freeze (expansión eterna, todo se enfría) y Big Rip (expansión acelerada desgarra todo). Las observaciones actuales favorecen el Big Freeze, con la energía oscura acelerando la expansión.' }
+          ]
+        },
+        {
+          titulo: 'Introducción a la Astrofísica: Leyes de Kepler',
+          lecciones: [
+            { titulo: 'Primera Ley de Kepler', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La primera ley de Kepler (1609) establece que los planetas orbitan al Sol en órbitas elípticas, con el Sol en uno de los focos. Una elipse tiene dos focos; el Sol ocupa uno. La excentricidad mide qué tan alargada es la órbita: la Tierra tiene excentricidad 0.017 (casi circular), mientras que Mercurio tiene 0.205 (más elíptica).' },
+            { titulo: 'Segunda Ley de Kepler', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La segunda ley (Ley de las Áreas) dice que el radio vector que une un planeta con el Sol barre áreas iguales en tiempos iguales. Esto significa que los planetas se mueven más rápido cuando están cerca del Sol (perihelio) y más lento cuando están lejos (afelio). La Tierra está en perihelio en enero (147 millones km) y afelio en julio (152 millones km).' },
+            { titulo: 'Tercera Ley de Kepler', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La tercera ley relaciona el periodo orbital (T) con la distancia media al Sol (a): T² = a³ (cuando T está en años terrestres y a en UA). Por ejemplo, Marte está a 1.52 UA, entonces T² = 1.52³, T = 1.88 años (687 días). Esta ley permitió calcular distancias en el Sistema Solar por primera vez.' },
+            { titulo: 'Aplicaciones de las Leyes de Kepler', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las leyes de Kepler son fundamentales para: calcular órbitas de satélites artificiales, determinar masas de estrellas binarias, descubrir exoplanetas (método de velocidad radial), planificar misiones espaciales y entender la dinámica del Sistema Solar. Newton demostró que estas leyes derivan de la ley de gravitación universal.' }
           ]
         }
       ]
     },
     {
-      id: 'sistema-solar-db',
-      titulo: 'Sistema Solar',
+      id: 'astronomia-db',
+      titulo: 'Astronomía de Cielo Profundo',
       siglas: 'DB',
-      desc: 'Exploración detallada de los cuerpos celestes que componen nuestro sistema solar: planetas, lunas, asteroides, cometas y más.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Planets2013.svg/800px-Planets2013.svg.png',
+      desc: 'Exploración detallada de objetos de cielo profundo: estrellas binarias, cúmulos estelares, nebulosas, galaxias y técnicas avanzadas de observación astronómica.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg/800px-Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg',
       color: '#8b5cf6',
+      profesor: 'Diego Blanco',
       modulos: [
         {
-          titulo: 'El Sol y su Influencia',
+          titulo: 'Estrellas Binarias y Múltiples',
           lecciones: [
-            { titulo: 'Estructura del Sol', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El Sol tiene capas internas (núcleo, zona radiativa, zona convectiva) y atmosféricas (fotosfera, cromosfera, corona). Las manchas solares son regiones más frías en la fotosfera. Las erupciones solares y eyecciones de masa coronal afectan el clima espacial.' },
-            { titulo: 'Viento Solar y Magnetósferas', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El viento solar es un flujo de partículas cargadas que viaja a 400-800 km/s. Protege a los planetas del viento solar mediante sus campos magnéticos. La Tierra tiene una magnetósfera que nos protege y genera auroras boreales.' },
-            { titulo: 'Eclipses y Fenómenos Solares', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Los eclipses solares ocurren cuando la Luna se interpone entre el Sol y la Tierra. Los eclipses lunares ocurren cuando la Tierra se interpone. En 2026 hay un eclipse total de Luna (14 marzo) y uno parcial de Sol (29 marzo).' }
+            { titulo: 'Sistemas Estelares Múltiples', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Más del 50% de las estrellas forman parte de sistemas múltiples. Las binarias pueden ser: visuales (separadas visiblemente), espectroscópicas (detectadas por desplazamiento Doppler), eclipsantes (una pasa frente a la otra) y astrométricas (detectadas por el bamboleo de la estrella principal). Sirio, la estrella más brillante del cielo, es un sistema binario.' },
+            { titulo: 'Medición de Masas Estelares', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las estrellas binarias son fundamentales para medir masas estelares. Aplicando la tercera ley de Kepler, podemos calcular la masa total del sistema a partir del período orbital y la separación. Conocemos las masas de las estrellas principalmente gracias al estudio de sistemas binarios. Esta es la única forma directa de medir masas estelares.' },
+            { titulo: 'Binarias Eclipsantes y su Importancia', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Las binarias eclipsantes como Algol (la "Estrella Demonio" en Perseo) permiten medir radios estelares y temperaturas. La curva de luz muestra dos caídas de brillo cuando una estrella eclipsa a la otra. El estudio de estas sistemas ha sido crucial para entender la evolución estelar y calibrar modelos astrofísicos.' }
           ]
         },
         {
-          titulo: 'Planetas y sus Lunas',
+          titulo: 'Cúmulos Estelares',
           lecciones: [
-            { titulo: 'Mercurio y Venus', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Mercurio es el planeta más pequeño (4,879 km) y más cercano al Sol. Su día dura 59 días terrestres. Venus es similar en tamaño a la Tierra pero tiene atmósfera de CO2, presión 90 veces mayor y temperatura de 462°C. Gira al revés (retrógrado).' },
-            { titulo: 'Tierra y Marte', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La Tierra es el único planeta con agua líquida y vida. Marte tiene el Monte Olimpo (21.9 km) y Valles Marineris (4,000 km). Tiene dos lunas: Fobos y Deimos. El rover Perseverance busca signos de vida desde 2021.' },
-            { titulo: 'Júpiter y Saturno', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Júpiter tiene 95 lunas, incluyendo Ío (volcanes), Europa (océano subterráneo), Ganímedes (mayor luna) y Calisto. Saturno tiene 146 lunas conocidas y anillos de hielo y roca. Titán tiene atmósfera densa y lagos de metano.' },
-            { titulo: 'Urano y Neptuno', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Urano rota de lado (98° inclinación), con 27 lunas. Neptuno tiene vientos de 2,100 km/h y 16 lunas. Tritón, la luna más grande de Neptuno, orbita en dirección opuesta, sugiriendo que fue capturada del cinturón de Kuiper.' }
+            { titulo: 'Cúmulos Abiertos', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Los cúmulos abiertos son grupos de estrellas jóvenes (generalmente <1,000 millones de años) nacidas de la misma nube molecular. Contienen desde decenas hasta miles de estrellas. Ejemplos famosos: las Pléyades (M45, a 444 años luz) y los Cuellos (Hyades, a 153 años luz). Son ideales para estudiar evolución estelar.' },
+            { titulo: 'Cúmulos Globulares', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Los cúmulos globulares son grupos esféricos de estrellas viejas (10-13 mil millones de años) que orbitan las galaxias. Contienen cientos de miles de estrellas en un diámetro de 100-200 años luz. Omega Centauri (NGC 5139) es el más brillante del cielo, visible a simple vista. La Vía Láctea tiene unos 150 cúmulos globulares.' },
+            { titulo: 'Diagrama HR y Evolución Estelar', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'El diagrama Hertzsprung-Russell (HR) grafica temperatura vs. luminosidad estelar. Los cúmulos son laboratorios ideales para estudiar evolución estelar porque todas sus estrellas tienen la misma edad y composición inicial. Al observar un cúmulo podemos determinar su edad por el "punto de giro" de la secuencia principal.' }
           ]
         },
         {
-          titulo: 'Cuerpos Menores',
+          titulo: 'Fotometría y Técnicas de Observación',
           lecciones: [
-            { titulo: 'Cinturón de Asteroides', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Entre Marte y Júpiter hay millones de asteroides. Ceres es el más grande (940 km) y es un planeta enano. La NASA visitó Bennu con OSIRIS-REx y Japón visitó Ryugu con Hayabusa2, trayendo muestras a la Tierra.' },
-            { titulo: 'Cometas y Meteoroides', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Los cometas son cuerpos de hielo y polvo del sistema solar exterior. El cometa Halley visita cada 76 años. Los meteoroides son fragmentos rocosos. Al entrar en la atmósfera terrestre, se vuelven meteoros (estrellas fugaces). Si llegan al suelo, son meteoritos.' },
-            { titulo: 'El Cinturón de Kuiper y la Nube de Oort', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'Más allá de Neptuno está el cinturón de Kuiper, con Plutón, Haumea, Makemake y Eris como planetas enanos. La Nube de Oort, a 1 año luz del Sol, contiene billones de cometas. Es el límite gravitacional del sistema solar.' }
+            { titulo: 'Fotometría Astronómica', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La fotometría mide el brillo de los objetos celestes. El sistema UBV (Johnson) usa filtros ultravioleta, azul y visual. La magnitud aparente (m) mide el brillo visto desde la Tierra; la magnitud absoluta (M) es el brillo a 10 pársecs. La diferencia de 5 magnitudes equivale a un factor de 100 en brillo.' },
+            { titulo: 'Espectroscopía Estelar', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La espectroscopía descompone la luz estelar en sus longitudes de onda, revelando: composición química (líneas de absorción de hidrógeno, helio, calcio, etc.), temperatura, velocidad radial (efecto Doppler), campo magnético (efecto Zeeman) y rotación estelar. Cada elemento químico tiene un patrón único de líneas espectrales.' },
+            { titulo: 'Técnicas de Astrofotografía', video: 'https://www.youtube.com/embed/0r4F5LBfXxo', texto: 'La astrofotografía moderna usa: CCDs (sensores de alta sensibilidad), apilado de múltiples exposiciones para reducir ruido, guiado autónomo (seguimiento preciso de estrellas), filtros de banda estrecha (H-alfa, OIII, SII) y procesamiento digital. El Telescopio Espacial Hubble utiliza una cámara CCD de 16 megapíxeles.' }
           ]
         }
       ]
