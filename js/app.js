@@ -2135,8 +2135,7 @@
 
     qsa('.leccion-item').forEach(el => {
       el.addEventListener('click', () => {
-        const [courseId, mi, li] = el.dataset.leccion.split('-');
-        openLeccion(course, +mi, +li);
+        openLeccion(course, +el.dataset.mi, +el.dataset.li);
       });
     });
   }
