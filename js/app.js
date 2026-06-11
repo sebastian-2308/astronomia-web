@@ -2158,7 +2158,7 @@
           <button class="btn btn-sm btn-secondary" id="closeLeccionBtn">✕</button>
         </div>
         <div style="aspect-ratio:16/9;background:#000;border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;">
-          <iframe src="${lec.video}" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:100%;border:none;" allowfullscreen loading="lazy"></iframe>
+          <iframe src="${lec.video}?feature=oembed" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
         </div>
         <div style="background:var(--bg-card);padding:1rem;border-radius:var(--radius);margin-bottom:1rem;max-height:200px;overflow-y:auto;font-size:0.9rem;line-height:1.7;">
           ${lec.texto}
