@@ -2173,8 +2173,13 @@
 
     const playerDiv = overlay.querySelector('#youtube-player');
     const videoId = lec.video.split('/embed/')[1];
+    const fallbackLink = document.createElement('a');
+    fallbackLink.href = `https://www.youtube.com/watch?v=${videoId}`;
+    fallbackLink.target = '_blank';
+    fallbackLink.textContent = '▶ Ver en YouTube';
+    fallbackLink.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;text-decoration:none;font-size:1.1rem;z-index:2;';
+    playerDiv.style.position = 'relative';
     const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube.com/embed/${videoId}?origin=${encodeURIComponent(window.location.origin)}`;
     iframe.style.width = '100%';
     iframe.style.height = '100%';
     iframe.style.border = 'none';
@@ -2182,7 +2187,9 @@
     iframe.allowFullscreen = true;
     iframe.loading = 'lazy';
     iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    playerDiv.appendChild(fallbackLink);
     playerDiv.appendChild(iframe);
+    fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`).then(r => r.json()).then(d => { if (d && d.html) { const m = d.html.match(/src="([^"]+)"/); if (m) { iframe.src = m[1]; fallbackLink.style.display = 'none'; } } }).catch(() => { iframe.src = `https://www.youtube.com/embed/${videoId}`; fallbackLink.style.display = 'none'; });
 
     const close = () => { overlay.remove(); showStudentPanel(); };
     overlay.querySelector('#closeLeccionBtn').addEventListener('click', close);
