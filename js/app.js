@@ -2175,7 +2175,7 @@
     const playerDiv = overlay.querySelector('#youtube-player');
     const videoId = lec.video.split('/embed/')[1];
     playerDiv.innerHTML = `
-      <iframe src="https://www.youtube.com/embed/${videoId}" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+      <iframe src="https://www.youtube-nocookie.com/embed/${videoId}" style="width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
       <div style="position:absolute;bottom:0;left:0;right:0;text-align:center;padding:0.5rem;z-index:3;">
         <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" style="color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;">▶ Ver en YouTube si no carga</a>
       </div>
