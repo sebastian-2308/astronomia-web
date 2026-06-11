@@ -2158,7 +2158,7 @@
           <button class="btn btn-sm btn-secondary" id="closeLeccionBtn">✕</button>
         </div>
         <div style="aspect-ratio:16/9;background:#000;border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;">
-          <iframe src="${lec.video}?feature=oembed" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          <div id="youtube-player" style="width:100%;height:100%;"></div>
         </div>
         <div style="background:var(--bg-card);padding:1rem;border-radius:var(--radius);margin-bottom:1rem;max-height:200px;overflow-y:auto;font-size:0.9rem;line-height:1.7;">
           ${lec.texto}
@@ -2170,6 +2170,19 @@
       </div>
     `;
     document.body.appendChild(overlay);
+
+    const playerDiv = overlay.querySelector('#youtube-player');
+    const videoId = lec.video.split('/embed/')[1];
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    playerDiv.appendChild(iframe);
 
     const close = () => { overlay.remove(); showStudentPanel(); };
     overlay.querySelector('#closeLeccionBtn').addEventListener('click', close);
