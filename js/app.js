@@ -167,7 +167,6 @@
         gameRanking: APP.state.gameRanking,
         news: APP.state.news,
         visitas: APP.state.visitas,
-        gallery: APP.state.gallery,
         facts: APP.state.facts,
         efemerides: APP.state.efemerides,
         notifications: APP.state.notifications,
@@ -185,7 +184,6 @@
         if (data.gameRanking) APP.state.gameRanking = data.gameRanking;
         if (data.news) APP.state.news = data.news;
         if (data.visitas) APP.state.visitas = data.visitas;
-        if (data.gallery) APP.state.gallery = data.gallery;
         if (data.facts) APP.state.facts = data.facts;
         if (data.efemerides) APP.state.efemerides = data.efemerides;
         if (data.notifications) APP.state.notifications = data.notifications;
