@@ -1,1 +1,1 @@
-var GIT_TOKEN = 'tu_token_github_aqui';
+window.GIT_TOKEN = 'tu_token_github_aqui';
