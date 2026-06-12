@@ -257,12 +257,12 @@ const DATA = {
       desc: 'Curso introductorio de astronomía con el objetivo de divulgar y fomentar el interés en ella. Incluye telescopios e instrumentos de medición, medidas de posicionamiento terrestre y celeste, constelaciones, La Tierra y La Luna, el Sistema Solar, el Sol y las estrellas, nebulosas y galaxias, teorías del origen del Universo y leyes de Kepler.',
       img: 'https://campusvirtual.fundacite-caracas.com/pluginfile.php/463/course/overviewfiles/telescope-870x563.jpg',
       color: '#2563eb',
-      profesor: 'Diego Peña (DIEGO PENA)',
+      profesor: 'Diego Peña (DIEGO PEÑA)',
       modulos: [
         {
           titulo: 'Telescopios e Instrumentos de Medición',
           lecciones: [
-            { titulo: 'Tipos de Telescopios', video: 'https://www.youtube.com/embed/mNSzwN3BU14', texto: 'Los telescopios son instrumentos diseñados para observar objetos lejanos mediante la captación de radiación electromagnética. Existen tres tipos principales: refractores (usan lentes), reflectores (usan espejos) y catadióptricos (combinación de ambos). Cada tipo tiene ventajas según el uso: los refractores son ideales para observación lunar y planetaria, mientras que los reflectores destacan en la observación de objetos de cielo profundo como nebulosas y galaxias.' },
+            { titulo: 'Tipos de Telescopios', video: 'https://www.youtube.com/watch?v=ENNIEjA5imY', texto: 'Los telescopios son instrumentos diseñados para observar objetos lejanos mediante la captación de radiación electromagnética. Existen tres tipos principales: refractores (usan lentes), reflectores (usan espejos) y catadióptricos (combinación de ambos). Cada tipo tiene ventajas según el uso: los refractores son ideales para observación lunar y planetaria, mientras que los reflectores destacan en la observación de objetos de cielo profundo como nebulosas y galaxias.' },
             { titulo: 'Partes y Funcionamiento', video: 'https://www.youtube.com/embed/mNSzwN3BU14', texto: 'Un telescopio se compone de: objetivo (lente o espejo principal que capta la luz), ocular (amplía la imagen formada por el objetivo), buscador (pequeño telescopio de bajo aumento para localizar objetos), montura (soporte que permite el movimiento) y trípode. La montura puede ser altacimutal (movimiento vertical y horizontal) o ecuatorial (alineada con el eje terrestre para seguir estrellas).' },
             { titulo: 'Instrumentos de Medición Astronómica', video: 'https://www.youtube.com/embed/mNSzwN3BU14', texto: 'Además de los telescopios ópticos, los astrónomos usan: radiotelescopios (captan ondas de radio), espectrógrafos (descomponen la luz para analizar composición química), fotómetros (miden brillo), CCDs (cámaras digitales de alta sensibilidad) y coronógrafos (bloquean la luz estelar para observar objetos débiles cercanos).' }
           ]
@@ -341,7 +341,7 @@ const DATA = {
       desc: 'Exploración detallada de objetos de cielo profundo: estrellas binarias, cúmulos estelares, nebulosas, galaxias y técnicas avanzadas de observación astronómica.',
       img: 'https://campusvirtual.fundacite-caracas.com/pluginfile.php/438/course/overviewfiles/001-1.jpg',
       color: '#8b5cf6',
-      profesor: 'Diego Blanco (DIEGO SAMUEL BLANCO ESPAA)',
+      profesor: 'Diego Blanco (DIEGO SAMUEL BLANCO ESPAÑA)',
       modulos: [
         {
           titulo: 'Estrellas Binarias y Múltiples',
