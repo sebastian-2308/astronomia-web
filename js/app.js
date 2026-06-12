@@ -24,31 +24,72 @@
   const ADMIN_PASS = 'seya2308';
   const ADMIN_EMAIL = 'sebastianalfonzo23@gmail.com';
 
-  // ==================== USER MANAGEMENT ====================
-  function getUsers() {
+  // ==================== GITHUB STORAGE ====================
+  const GIT_TOKEN = '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';
+  const GIT_OWNER = 'sebastian-2308';
+  const GIT_REPO = 'astronomia-web';
+  const GIT_FILE = 'data/registros.json';
+
+  async function githubGetFile() {
     try {
-      return JSON.parse(localStorage.getItem('astronomia_users') || '[]');
-    } catch(e) { return []; }
+      const res = await fetch(`https://api.github.com/repos/${GIT_OWNER}/${GIT_REPO}/contents/${GIT_FILE}`, {
+        headers: { Authorization: `token ${GIT_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      if (!res.ok) return { content: [], sha: null };
+      const data = await res.json();
+      const content = JSON.parse(atob(data.content));
+      return { content, sha: data.sha };
+    } catch(e) { return { content: [], sha: null }; }
   }
 
-  function saveUsers(users) {
-    localStorage.setItem('astronomia_users', JSON.stringify(users));
+  async function githubSaveFile(content, sha, message) {
+    try {
+      const body = {
+        message: message || 'Actualizar registros',
+        content: btoa(JSON.stringify(content, null, 2)),
+        sha: sha
+      };
+      const res = await fetch(`https://api.github.com/repos/${GIT_OWNER}/${GIT_REPO}/contents/${GIT_FILE}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${GIT_TOKEN}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github.v3+json' },
+        body: JSON.stringify(body)
+      });
+      return res.ok;
+    } catch(e) { return false; }
   }
 
-  function registerUser(email, username, password) {
-    const users = getUsers();
+  // ==================== USER MANAGEMENT (GitHub-backed) ====================
+  let _cachedUsers = null;
+
+  async function getUsers() {
+    if (_cachedUsers) return _cachedUsers;
+    const result = await githubGetFile();
+    _cachedUsers = result.content || [];
+    return _cachedUsers;
+  }
+
+  async function saveUsers(users) {
+    _cachedUsers = users;
+    const result = await githubGetFile();
+    const sha = result.sha;
+    await githubSaveFile(users, sha, 'Actualizar registros de usuarios');
+  }
+
+  async function registerUser(email, username, password) {
+    const users = await getUsers();
     if (users.find(u => u.username === username)) return { error: 'El usuario ya existe' };
     if (users.find(u => u.email === email)) return { error: 'El correo ya está registrado' };
-    users.push({ email, username, password, registeredAt: new Date().toISOString(), notificaciones: [] });
-    saveUsers(users);
-    return { success: true };
+    const newUser = { email, username, password, registeredAt: new Date().toISOString() };
+    users.push(newUser);
+    await saveUsers(users);
+    return { success: true, user: newUser };
   }
 
-  function loginUser(username, password) {
+  async function loginUser(username, password) {
     if (username === ADMIN_USER && password === ADMIN_PASS) {
       return { user: { username: ADMIN_USER, email: ADMIN_EMAIL, isAdmin: true } };
     }
-    const users = getUsers();
+    const users = await getUsers();
     const user = users.find(u => u.username === username && u.password === password);
     if (!user) return { error: 'Usuario o contraseña incorrectos' };
     return { user: { username: user.username, email: user.email, isAdmin: false } };
@@ -56,15 +97,15 @@
 
   function getCurrentUser() {
     try {
-      return JSON.parse(localStorage.getItem('astronomia_current_user'));
+      return JSON.parse(sessionStorage.getItem('astronomia_current_user'));
     } catch(e) { return null; }
   }
 
   function setCurrentUser(user) {
     if (user) {
-      localStorage.setItem('astronomia_current_user', JSON.stringify(user));
+      sessionStorage.setItem('astronomia_current_user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('astronomia_current_user');
+      sessionStorage.removeItem('astronomia_current_user');
     }
   }
 
@@ -72,44 +113,8 @@
     setCurrentUser(null);
     APP.state.isAdmin = false;
     updateAdminUI();
+    updateUserBtn();
     showToast('👋 Sesión cerrada', 'info');
-  }
-
-  function getUserNotifications(username) {
-    const users = getUsers();
-    const user = users.find(u => u.username === username);
-    return user ? user.notificaciones || [] : [];
-  }
-
-  function addUserNotification(username, title, msg) {
-    const users = getUsers();
-    const user = users.find(u => u.username === username);
-    if (user) {
-      if (!user.notificaciones) user.notificaciones = [];
-      user.notificaciones.push({ title, msg, date: new Date().toLocaleString('es-VE'), read: false });
-      saveUsers(users);
-    }
-  }
-
-  function markUserNotifRead(username, idx) {
-    const users = getUsers();
-    const user = users.find(u => u.username === username);
-    if (user && user.notificaciones && user.notificaciones[idx]) {
-      user.notificaciones[idx].read = true;
-      saveUsers(users);
-    }
-  }
-
-  function sendNotificationToAll(title, msg) {
-    const users = getUsers();
-    let count = 0;
-    users.forEach(u => {
-      if (!u.notificaciones) u.notificaciones = [];
-      u.notificaciones.push({ title, msg, date: new Date().toLocaleString('es-VE'), read: false });
-      count++;
-    });
-    saveUsers(users);
-    return count;
   }
 
   // ==================== UTILITIES ====================
@@ -509,10 +514,10 @@
     $('authRegCancelBtn').addEventListener('click', () => authModal.classList.remove('open'));
 
     // Login
-    $('authLoginBtn').addEventListener('click', () => {
+    $('authLoginBtn').addEventListener('click', async () => {
       const u = $('authLoginUser').value.trim();
       const p = $('authLoginPass').value;
-      const result = loginUser(u, p);
+      const result = await loginUser(u, p);
       if (result.error) {
         $('authLoginError').textContent = result.error;
         $('authLoginError').style.display = 'block';
@@ -525,12 +530,11 @@
       updateAdminUI();
       updateUserBtn();
       showToast(`👋 ¡Bienvenido, ${result.user.username}!`, 'success');
-      // Trigger auth callback
       if (window._onAuthCallback) window._onAuthCallback(result.user);
     });
 
     // Register
-    $('authRegisterBtn').addEventListener('click', () => {
+    $('authRegisterBtn').addEventListener('click', async () => {
       const email = $('authRegEmail').value.trim();
       const user = $('authRegUser').value.trim();
       const pass = $('authRegPass').value;
@@ -544,14 +548,13 @@
         $('authRegError').style.display = 'block';
         return;
       }
-      const result = registerUser(email, user, pass);
+      const result = await registerUser(email, user, pass);
       if (result.error) {
         $('authRegError').textContent = result.error;
         $('authRegError').style.display = 'block';
         return;
       }
-      // Auto-login after register
-      const loginResult = loginUser(user, pass);
+      const loginResult = await loginUser(user, pass);
       APP.state.isAdmin = loginResult.user.isAdmin;
       setCurrentUser(loginResult.user);
       authModal.classList.remove('open');
@@ -600,15 +603,35 @@
       const title = $('notifTitleInput').value.trim();
       const msg = $('notifMsgInput').value.trim();
       if (!title || !msg) { showToast('⚠️ Completa título y mensaje', 'warning'); return; }
-      const count = sendNotificationToAll(title, msg);
       $('notifTitleInput').value = '';
       $('notifMsgInput').value = '';
-      $('notifStatus').textContent = `✅ Enviado a ${count} usuarios`;
-      showToast(`📨 Notificación enviada a ${count} usuarios`, 'success');
-      addNotification('📨', `Notificación enviada a ${count} usuarios: ${title}`);
+      $('notifStatus').textContent = '✅ Notificación registrada';
+      addNotification('📨', `Anuncio: ${title}`);
+      showToast('📨 Anuncio enviado', 'success');
     });
 
     $('addGalleryBtn').addEventListener('click', () => openGalleryEditor(-1));
+
+    // View registered users
+    $('viewUsersBtn').addEventListener('click', async () => {
+      const result = await githubGetFile();
+      const users = result.content || [];
+      if (users.length === 0) {
+        $('usersModalBody').innerHTML = '<p style="color:var(--text-secondary);">No hay usuarios registrados aún.</p>';
+      } else {
+        $('usersModalBody').innerHTML = `<p style="margin-bottom:0.5rem;color:var(--text-secondary);">Total: <strong>${users.length}</strong></p>` +
+          users.map((u, i) => `<div style="padding:0.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div><strong>${u.username}</strong><br><span style="font-size:0.8rem;color:var(--text-secondary);">${u.email}</span></div>
+            <span style="font-size:0.75rem;color:var(--text-secondary);">${new Date(u.registeredAt).toLocaleDateString('es-VE')}</span>
+          </div>`).join('');
+      }
+      $('usersModal').classList.add('open');
+    });
+    $('closeUsersBtn').addEventListener('click', () => $('usersModal').classList.remove('open'));
+    $('usersModal').addEventListener('click', e => {
+      if (e.target === $('usersModal')) $('usersModal').classList.remove('open');
+    });
+
     initEfemeridesAdmin();
     initEditModal();
   }

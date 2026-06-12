@@ -96,6 +96,7 @@
       <button class="btn btn-sm btn-secondary" id="resetRankingBtn">🗑️ Resetear Ranking</button>
       <button class="btn btn-sm btn-secondary" id="resetVisitasBtn">📊 Resetear Visitas</button>
       <button class="btn btn-sm btn-secondary" id="exportDataBtn">📥 Exportar Datos</button>
+      <button class="btn btn-sm btn-primary" id="viewUsersBtn">👥 Ver Usuarios</button>
     </div>
     <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
       <h3 style="font-size:0.9rem;margin-bottom:0.5rem;">📧 Enviar Notificación a Todos los Usuarios</h3>
@@ -563,6 +564,17 @@
         <button class="btn btn-secondary" id="authRegCancelBtn">Cancelar</button>
         <button class="btn btn-primary" id="authRegisterBtn">Registrarse</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL USERS -->
+<div class="modal-overlay" id="usersModal">
+  <div class="modal-box" style="max-width:600px;">
+    <h3>👥 Usuarios Registrados</h3>
+    <div id="usersModalBody" style="max-height:400px;overflow-y:auto;margin:1rem 0;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="closeUsersBtn">Cerrar</button>
     </div>
   </div>
 </div>
