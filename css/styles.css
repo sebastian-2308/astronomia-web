@@ -1021,6 +1021,7 @@ canvas { max-width: 100%; height: auto; display: block; }
   top: 48px;
   right: 0;
   width: 340px;
+  max-width: calc(100vw - 2rem);
   max-height: 400px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
@@ -1219,11 +1220,9 @@ canvas { max-width: 100%; height: auto; display: block; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .detail-grid { grid-template-columns: repeat(2, 1fr); }
   .notification-dropdown {
-    position: fixed;
-    top: 56px;
-    right: 0.5rem;
-    left: 0.5rem;
-    width: auto;
+    right: 0;
+    left: auto;
+    width: calc(100vw - 2rem);
     max-height: 60vh;
   }
 }
