@@ -22,12 +22,12 @@ const DATA = {
     { nombre: 'Neptuno', desc: 'El planeta más ventoso.', img: 'https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg' },
     { nombre: 'Luna', desc: 'Nuestro satélite natural.', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg' },
     { nombre: 'Plutón', desc: 'Planeta enano del cinturón de Kuiper, 5 lunas.', img: 'https://images-assets.nasa.gov/image/PIA19952/PIA19952~orig.jpg' },
-    { nombre: 'Ceres', desc: 'Planeta enano en el cinturón de asteroides.', img: 'https://images-assets.nasa.gov/image/PIA19620/PIA19620~orig.jpg' },
-    { nombre: 'Cometa Halley', desc: 'El cometa más famoso, visible cada 76 años.', img: 'https://images-assets.nasa.gov/image/PIA02143/PIA02143~orig.jpg' },
-    { nombre: 'Nebulosa de Orión', desc: 'Vivero estelar a 1,344 años luz.', img: 'https://images-assets.nasa.gov/image/PIA17004/PIA17004~orig.jpg' },
+    { nombre: 'Ceres', desc: 'Planeta enano en el cinturón de asteroides.', img: 'https://upload.wikimedia.org/wikipedia/commons/5/58/Ceres_-_RC3_-_Haulani_Crater_%2822381131691%29.jpg' },
+    { nombre: 'Cometa Halley', desc: 'El cometa más famoso, visible cada 76 años.', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Lspn_comet_halley.jpg/1280px-Lspn_comet_halley.jpg' },
+    { nombre: 'Nebulosa de Orión', desc: 'Vivero estelar a 1,344 años luz.', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg/960px-Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg' },
     { nombre: 'Galaxia Andrómeda', desc: 'Nuestra galaxia vecina, a 2.5 millones de años luz.', img: 'https://upload.wikimedia.org/wikipedia/commons/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg' },
-    { nombre: 'Agujero Negro M87', desc: 'Primer agujero negro fotografiado (2019).', img: 'https://images-assets.nasa.gov/image/PIA23151/PIA23151~orig.jpg' },
-    { nombre: 'Galaxia Remolino', desc: 'Galaxia espiral clásica a 23 millones de años luz.', img: 'https://images-assets.nasa.gov/image/PIA04585/PIA04585~orig.jpg' }
+    { nombre: 'Agujero Negro M87', desc: 'Primer agujero negro fotografiado (2019).', img: 'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/webb/science/2025/webb-STScI-01JKREFYNJE7MT5SG2H0FBYG75-2K.png?w=1920&h=1080&fit=clip&crop=faces%2Cfocalpoint' },
+    { nombre: 'Galaxia Remolino', desc: 'Galaxia espiral clásica a 23 millones de años luz.', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Messier51.jpg/1280px-Messier51.jpg' }
   ],
 
   facts: [
