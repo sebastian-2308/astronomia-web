@@ -25,7 +25,7 @@
   const ADMIN_EMAIL = 'sebastianalfonzo23@gmail.com';
 
   // ==================== GITHUB STORAGE ====================
-  const GIT_TOKEN = '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';
+  const GIT_TOKEN = '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';
   const GIT_OWNER = 'sebastian-2308';
   const GIT_REPO = 'astronomia-web';
   const GIT_FILE = 'data/registros.json';
