@@ -20,10 +20,97 @@
     foroPosts: {}
   };
 
-  const ADMIN_CREDS = [
-    { user: 'jorge', pass: 'astronomiacaracas' },
-    { user: 'sebastian', pass: 'astronomiacaracas' }
-  ];
+  const ADMIN_USER = 'sebas2308';
+  const ADMIN_PASS = 'seya2308';
+  const ADMIN_EMAIL = 'sebastianalfonzo23@gmail.com';
+
+  // ==================== USER MANAGEMENT ====================
+  function getUsers() {
+    try {
+      return JSON.parse(localStorage.getItem('astronomia_users') || '[]');
+    } catch(e) { return []; }
+  }
+
+  function saveUsers(users) {
+    localStorage.setItem('astronomia_users', JSON.stringify(users));
+  }
+
+  function registerUser(email, username, password) {
+    const users = getUsers();
+    if (users.find(u => u.username === username)) return { error: 'El usuario ya existe' };
+    if (users.find(u => u.email === email)) return { error: 'El correo ya está registrado' };
+    users.push({ email, username, password, registeredAt: new Date().toISOString(), notificaciones: [] });
+    saveUsers(users);
+    return { success: true };
+  }
+
+  function loginUser(username, password) {
+    if (username === ADMIN_USER && password === ADMIN_PASS) {
+      return { user: { username: ADMIN_USER, email: ADMIN_EMAIL, isAdmin: true } };
+    }
+    const users = getUsers();
+    const user = users.find(u => u.username === username && u.password === password);
+    if (!user) return { error: 'Usuario o contraseña incorrectos' };
+    return { user: { username: user.username, email: user.email, isAdmin: false } };
+  }
+
+  function getCurrentUser() {
+    try {
+      return JSON.parse(localStorage.getItem('astronomia_current_user'));
+    } catch(e) { return null; }
+  }
+
+  function setCurrentUser(user) {
+    if (user) {
+      localStorage.setItem('astronomia_current_user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('astronomia_current_user');
+    }
+  }
+
+  function logoutUser() {
+    setCurrentUser(null);
+    APP.state.isAdmin = false;
+    updateAdminUI();
+    showToast('👋 Sesión cerrada', 'info');
+  }
+
+  function getUserNotifications(username) {
+    const users = getUsers();
+    const user = users.find(u => u.username === username);
+    return user ? user.notificaciones || [] : [];
+  }
+
+  function addUserNotification(username, title, msg) {
+    const users = getUsers();
+    const user = users.find(u => u.username === username);
+    if (user) {
+      if (!user.notificaciones) user.notificaciones = [];
+      user.notificaciones.push({ title, msg, date: new Date().toLocaleString('es-VE'), read: false });
+      saveUsers(users);
+    }
+  }
+
+  function markUserNotifRead(username, idx) {
+    const users = getUsers();
+    const user = users.find(u => u.username === username);
+    if (user && user.notificaciones && user.notificaciones[idx]) {
+      user.notificaciones[idx].read = true;
+      saveUsers(users);
+    }
+  }
+
+  function sendNotificationToAll(title, msg) {
+    const users = getUsers();
+    let count = 0;
+    users.forEach(u => {
+      if (!u.notificaciones) u.notificaciones = [];
+      u.notificaciones.push({ title, msg, date: new Date().toLocaleString('es-VE'), read: false });
+      count++;
+    });
+    saveUsers(users);
+    return count;
+  }
 
   // ==================== UTILITIES ====================
   function $(id) { return document.getElementById(id); }
@@ -216,7 +303,7 @@
     const container = $(containerId);
     if (!container) return;
 
-    const currentStudent = localStorage.getItem('aulaStudent') || 'Anónimo';
+    const currentStudent = getCurrentUser() ? getCurrentUser().username : 'Anónimo';
     const posts = getForoPosts(courseId, foroType);
 
     let html = `<div style="margin-bottom:1rem;">
@@ -373,29 +460,113 @@
 
   // ==================== ADMIN ====================
   function initAdmin() {
-    const loginModal = $('loginModal');
-    $('adminBtn').addEventListener('click', () => {
-      if (APP.state.isAdmin) {
-        APP.state.isAdmin = false;
-        updateAdminUI();
-      } else {
-        loginModal.classList.add('open');
-      }
+    const authModal = $('authModal');
+
+    // Auth tab switching
+    $('authTabLogin').addEventListener('click', () => {
+      $('authTabLogin').style.cssText = 'flex:1;padding:0.6rem;border:none;background:transparent;color:var(--accent);font-weight:600;border-bottom:2px solid var(--accent);cursor:pointer;font-size:0.95rem;';
+      $('authTabRegister').style.cssText = 'flex:1;padding:0.6rem;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;font-size:0.95rem;';
+      $('authLoginForm').style.display = 'block';
+      $('authRegisterForm').style.display = 'none';
+      $('authLoginError').style.display = 'none';
+      $('authRegError').style.display = 'none';
     });
-    $('cancelLoginBtn').addEventListener('click', () => loginModal.classList.remove('open'));
-    $('confirmLoginBtn').addEventListener('click', () => {
-      const u = $('adminUser').value.trim();
-      const p = $('adminPass').value;
-      if (ADMIN_CREDS.some(c => c.user === u && c.pass === p)) {
-        APP.state.isAdmin = true;
-        loginModal.classList.remove('open');
-        updateAdminUI();
-        showToast('✅ Modo administrador activado', 'success');
+    $('authTabRegister').addEventListener('click', () => {
+      $('authTabRegister').style.cssText = 'flex:1;padding:0.6rem;border:none;background:transparent;color:var(--accent);font-weight:600;border-bottom:2px solid var(--accent);cursor:pointer;font-size:0.95rem;';
+      $('authTabLogin').style.cssText = 'flex:1;padding:0.6rem;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;font-size:0.95rem;';
+      $('authLoginForm').style.display = 'none';
+      $('authRegisterForm').style.display = 'block';
+      $('authLoginError').style.display = 'none';
+      $('authRegError').style.display = 'none';
+    });
+
+    function openAuth() {
+      authModal.classList.add('open');
+      $('authLoginError').style.display = 'none';
+      $('authRegError').style.display = 'none';
+      $('authLoginUser').value = '';
+      $('authLoginPass').value = '';
+      $('authRegEmail').value = '';
+      $('authRegUser').value = '';
+      $('authRegPass').value = '';
+    }
+
+    // User button in header
+    $('userBtn').addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (user) {
+        if (confirm('¿Cerrar sesión?')) {
+          logoutUser();
+          updateUserBtn();
+        }
       } else {
-        $('loginError').textContent = 'Credenciales incorrectas';
+        openAuth();
       }
     });
 
+    // Cancel buttons
+    $('authCancelBtn').addEventListener('click', () => authModal.classList.remove('open'));
+    $('authRegCancelBtn').addEventListener('click', () => authModal.classList.remove('open'));
+
+    // Login
+    $('authLoginBtn').addEventListener('click', () => {
+      const u = $('authLoginUser').value.trim();
+      const p = $('authLoginPass').value;
+      const result = loginUser(u, p);
+      if (result.error) {
+        $('authLoginError').textContent = result.error;
+        $('authLoginError').style.display = 'block';
+        return;
+      }
+      APP.state.isAdmin = result.user.isAdmin;
+      if (result.user.isAdmin) APP.state.currentUser = result.user;
+      setCurrentUser(result.user);
+      authModal.classList.remove('open');
+      updateAdminUI();
+      updateUserBtn();
+      showToast(`👋 ¡Bienvenido, ${result.user.username}!`, 'success');
+      // Trigger auth callback
+      if (window._onAuthCallback) window._onAuthCallback(result.user);
+    });
+
+    // Register
+    $('authRegisterBtn').addEventListener('click', () => {
+      const email = $('authRegEmail').value.trim();
+      const user = $('authRegUser').value.trim();
+      const pass = $('authRegPass').value;
+      if (!email || !user || !pass) {
+        $('authRegError').textContent = 'Todos los campos son obligatorios';
+        $('authRegError').style.display = 'block';
+        return;
+      }
+      if (!email.includes('@')) {
+        $('authRegError').textContent = 'Ingresa un correo válido';
+        $('authRegError').style.display = 'block';
+        return;
+      }
+      const result = registerUser(email, user, pass);
+      if (result.error) {
+        $('authRegError').textContent = result.error;
+        $('authRegError').style.display = 'block';
+        return;
+      }
+      // Auto-login after register
+      const loginResult = loginUser(user, pass);
+      APP.state.isAdmin = loginResult.user.isAdmin;
+      setCurrentUser(loginResult.user);
+      authModal.classList.remove('open');
+      updateAdminUI();
+      updateUserBtn();
+      showToast('✅ Registro exitoso! Bienvenido!', 'success');
+      addNotification('📝', `${user} se registró en la plataforma`);
+      if (window._onAuthCallback) window._onAuthCallback(loginResult.user);
+    });
+
+    // Enter key support
+    $('authLoginPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('authLoginBtn').click(); });
+    $('authRegPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('authRegisterBtn').click(); });
+
+    // Admin buttons
     $('resetRankingBtn').addEventListener('click', () => {
       if (confirm('¿Resetear todo el ranking?')) {
         APP.state.ranking = [];
@@ -424,16 +595,45 @@
       a.click();
     });
 
+    // Send notification to all users
+    $('sendNotifBtn').addEventListener('click', () => {
+      const title = $('notifTitleInput').value.trim();
+      const msg = $('notifMsgInput').value.trim();
+      if (!title || !msg) { showToast('⚠️ Completa título y mensaje', 'warning'); return; }
+      const count = sendNotificationToAll(title, msg);
+      $('notifTitleInput').value = '';
+      $('notifMsgInput').value = '';
+      $('notifStatus').textContent = `✅ Enviado a ${count} usuarios`;
+      showToast(`📨 Notificación enviada a ${count} usuarios`, 'success');
+      addNotification('📨', `Notificación enviada a ${count} usuarios: ${title}`);
+    });
+
     $('addGalleryBtn').addEventListener('click', () => openGalleryEditor(-1));
     initEfemeridesAdmin();
     initEditModal();
   }
 
+  function updateUserBtn() {
+    const user = getCurrentUser();
+    const btn = $('userBtn');
+    if (user) {
+      if (user.isAdmin) {
+        btn.textContent = '👑';
+        btn.title = `Admin: ${user.username}`;
+      } else {
+        btn.textContent = '👤';
+        btn.title = user.username;
+      }
+    } else {
+      btn.textContent = '👤';
+      btn.title = 'Iniciar sesión';
+    }
+  }
+
   function updateAdminUI() {
-    const adminBtn = $('adminBtn');
+    const user = getCurrentUser();
+    APP.state.isAdmin = user && user.isAdmin;
     if (APP.state.isAdmin) {
-      adminBtn.textContent = '👑 Admin';
-      adminBtn.classList.add('active');
       qsa('.admin-panel').forEach(el => el.style.display = 'block');
       $('adminVisitasPanel').style.display = 'block';
       $('adminControlsPanel').style.display = 'block';
@@ -441,7 +641,6 @@
       $('galleryAdminBar').style.display = 'block';
       updateVisitDisplay();
     } else {
-      adminBtn.classList.remove('active');
       qsa('.admin-panel').forEach(el => el.style.display = 'none');
       $('adminVisitasPanel').style.display = 'none';
       $('adminControlsPanel').style.display = 'none';
@@ -1400,18 +1599,40 @@
   const questionBank = generateQuestions();
 
   function initQuiz() {
-    $('startQuizBtn').addEventListener('click', startQuiz);
     $('nextQuestionBtn').addEventListener('click', () => {
       if (quizState.active) {
         $('nextQuestionBtn').style.display = 'none';
         loadNextQuestion();
       }
     });
+
+    // Auth buttons for quiz
+    $('quizLoginBtn').addEventListener('click', () => {
+      window._onAuthCallback = (user) => {
+        startQuiz(user.username);
+        window._onAuthCallback = null;
+      };
+      $('authModal').classList.add('open');
+    });
+    $('quizRegisterBtn').addEventListener('click', () => {
+      // Switch to register tab
+      $('authTabRegister').click();
+      window._onAuthCallback = (user) => {
+        startQuiz(user.username);
+        window._onAuthCallback = null;
+      };
+      $('authModal').classList.add('open');
+    });
+
+    // Check if already logged in
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      $('quizAuthRequired').innerHTML = `<p style="color:var(--text-secondary);">👋 Bienvenido, <strong>${currentUser.username}</strong>! </p><button class="btn btn-success" id="startQuizBtn" style="margin-top:0.5rem;">Comenzar Desafío</button>`;
+      $('startQuizBtn').addEventListener('click', () => startQuiz(currentUser.username));
+    }
   }
 
-  function startQuiz() {
-    const name = $('playerName').value.trim();
-    if (!name) { alert('Ingresa tu nombre'); return; }
+  function startQuiz(name) {
     quizState = {
       active: true, player: name, score: 0,
       questions: shuffle([...questionBank]),
@@ -1445,7 +1666,16 @@
         setTimeout(() => {
           $('quizSection').style.display = 'none';
           $('loginSection').style.display = 'block';
-          $('playerName').value = '';
+          $('loginSection').innerHTML = `<p style="color:var(--text-secondary);margin-bottom:1rem;">🔐 Inicia sesión para jugar de nuevo.</p><button class="btn btn-primary" id="quizLoginBtn">Iniciar Sesión</button> <button class="btn btn-secondary" id="quizRegisterBtn" style="margin-left:0.5rem;">Registrarse</button>`;
+          $('quizLoginBtn').addEventListener('click', () => {
+            window._onAuthCallback = (user) => { startQuiz(user.username); window._onAuthCallback = null; };
+            $('authModal').classList.add('open');
+          });
+          $('quizRegisterBtn').addEventListener('click', () => {
+            $('authTabRegister').click();
+            window._onAuthCallback = (user) => { startQuiz(user.username); window._onAuthCallback = null; };
+            $('authModal').classList.add('open');
+          });
         }, 3000);
       }
     }, 1000);
@@ -1467,7 +1697,15 @@
       setTimeout(() => {
         $('quizSection').style.display = 'none';
         $('loginSection').style.display = 'block';
-        $('playerName').value = '';
+        $('loginSection').innerHTML = `<p style="color:var(--text-secondary);margin-bottom:1rem;">🏆 ¡Completaste las 100!</p><button class="btn btn-primary" id="quizLoginBtn">Volver a jugar</button>`;
+        $('quizLoginBtn').addEventListener('click', () => {
+          const user = getCurrentUser();
+          if (user) startQuiz(user.username);
+          else {
+            window._onAuthCallback = (u) => { startQuiz(u.username); window._onAuthCallback = null; };
+            $('authModal').classList.add('open');
+          }
+        });
       }, 3000);
       return;
     }
@@ -1519,7 +1757,15 @@
       setTimeout(() => {
         $('quizSection').style.display = 'none';
         $('loginSection').style.display = 'block';
-        $('playerName').value = '';
+        $('loginSection').innerHTML = `<p style="color:var(--text-secondary);margin-bottom:1rem;">❌ Fallaste. Puntuación: ${quizState.score}</p><button class="btn btn-primary" id="quizLoginBtn">Intentar de nuevo</button>`;
+        $('quizLoginBtn').addEventListener('click', () => {
+          const user = getCurrentUser();
+          if (user) startQuiz(user.username);
+          else {
+            window._onAuthCallback = (u) => { startQuiz(u.username); window._onAuthCallback = null; };
+            $('authModal').classList.add('open');
+          }
+        });
       }, 3000);
     }
   }
@@ -2222,9 +2468,6 @@
 
   // ==================== AULA VIRTUAL ====================
   function initAulaVirtual() {
-    const studentNameInput = $('studentNameInput');
-    const enterAulaBtn = $('enterAulaBtn');
-    const logoutStudentBtn = $('logoutStudentBtn');
     const backToCoursesBtn = $('backToCoursesBtn');
     const coursesContainer = $('coursesContainer');
     const courseDetailView = $('courseDetailView');
@@ -2245,15 +2488,14 @@
 
     function loadStudent() {
       try {
-        const saved = localStorage.getItem('aulaStudent');
-        if (saved) currentStudent = saved;
+        const user = getCurrentUser();
+        currentStudent = user ? user.username : null;
         const completed = localStorage.getItem('aulaCompleted');
         if (completed) completedLessons = JSON.parse(completed);
       } catch(e) {}
     }
 
     function saveStudent() {
-      localStorage.setItem('aulaStudent', currentStudent || '');
       localStorage.setItem('aulaCompleted', JSON.stringify(completedLessons));
     }
 
@@ -2395,7 +2637,7 @@
       const container = $(foroContentId);
       if (!container) return;
 
-      const currentStudent = localStorage.getItem('aulaStudent') || 'Anónimo';
+      const currentStudent = (getCurrentUser() && getCurrentUser().username) || 'Anónimo';
       const posts = getForoPosts(currentCourseId, currentForoType);
 
       let html = `<div style="margin-bottom:1rem;">
@@ -2490,7 +2732,7 @@
         const course = replyBtn.dataset.course;
         const foro = replyBtn.dataset.foro;
         const idx = parseInt(replyBtn.dataset.idx);
-        const autor = localStorage.getItem('aulaStudent') || 'Anónimo';
+        const autor = getCurrentUser() ? getCurrentUser().username : 'Anónimo';
         const replyText = prompt('Escribe tu respuesta:');
         if (replyText && replyText.trim()) {
           addForoReply(course, foro, idx, autor, replyText.trim());
@@ -2508,7 +2750,7 @@
         const textarea = document.getElementById(`foroNewPostText_${course}_${foro}`);
         const texto = textarea ? textarea.value.trim() : '';
         if (!texto) { showToast('⚠️ Escribe un mensaje', 'warning'); return; }
-        const autor = localStorage.getItem('aulaStudent') || 'Anónimo';
+        const autor = getCurrentUser() ? getCurrentUser().username : 'Anónimo';
         addForoPost(course, foro, autor, texto);
         if (textarea) textarea.value = '';
         if (course === currentCourseId && foro === currentForoType) {
@@ -2520,22 +2762,31 @@
       }
     });
 
-    enterAulaBtn.addEventListener('click', () => {
-      const name = studentNameInput.value.trim();
-      if (!name) { showToast('⚠️ Ingresa tu nombre', 'warning'); return; }
-      currentStudent = name;
-      saveStudent();
-      updateUI();
-      renderCourses();
-      addNotification('👋', `${name} inició sesión en el Aula Virtual`);
-      showToast(`👋 Bienvenido, ${name}!`, 'success');
+    // Aula virtual auth buttons
+    $('aulaLoginBtn').addEventListener('click', () => {
+      window._onAuthCallback = (user) => {
+        loadStudent();
+        updateUI();
+        renderCourses();
+        showToast(`👋 Bienvenido, ${user.username}!`, 'success');
+        window._onAuthCallback = null;
+      };
+      $('authModal').classList.add('open');
     });
 
-    studentNameInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') enterAulaBtn.click();
+    $('aulaRegisterBtn').addEventListener('click', () => {
+      $('authTabRegister').click();
+      window._onAuthCallback = (user) => {
+        loadStudent();
+        updateUI();
+        renderCourses();
+        showToast(`👋 Bienvenido, ${user.username}!`, 'success');
+        window._onAuthCallback = null;
+      };
+      $('authModal').classList.add('open');
     });
 
-    logoutStudentBtn.addEventListener('click', () => {
+    $('logoutStudentBtn').addEventListener('click', () => {
       currentStudent = null;
       completedLessons = {};
       saveStudent();
@@ -2642,6 +2893,7 @@
     initTabs();
     initTheme();
     initAdmin();
+    updateUserBtn();
     initNewsForm();
     initStarfield();
     initGravitySim();
