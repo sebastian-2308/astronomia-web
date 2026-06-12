@@ -21,6 +21,21 @@
     <span>☄️ Semillero Astronómico</span>
   </a>
   <div class="header-controls">
+    <div class="notification-wrapper" id="notificationWrapper">
+      <button class="btn-icon" id="notificationBell" aria-label="Notificaciones">
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="currentColor"/>
+        </svg>
+        <span class="notification-badge" id="notificationBadge" style="display:none;">0</span>
+      </button>
+      <div class="notification-dropdown" id="notificationDropdown">
+        <div class="notification-dropdown-header">
+          <strong>Notificaciones</strong>
+          <button class="btn btn-xs btn-secondary" id="markAllNotifRead">✓ Leídas</button>
+        </div>
+        <div class="notification-list" id="notificationList"><div style="padding:1rem;color:var(--text-secondary);font-size:0.85rem;">Sin notificaciones</div></div>
+      </div>
+    </div>
     <button class="btn-admin" id="adminBtn">👑 Admin</button>
     <button class="btn-icon" id="themeToggle" aria-label="Cambiar tema">
       <svg viewBox="0 0 24 24" width="20" height="20">
@@ -452,6 +467,31 @@
   <div id="courseDetailView" style="display:none;">
     <button class="btn btn-sm btn-secondary" id="backToCoursesBtn" style="margin-bottom:1rem;">← Volver a cursos</button>
     <div id="courseDetailContent"></div>
+
+    <div id="courseGeniallyContainer" class="card" style="margin-top:1rem;"></div>
+
+    <div class="card" id="courseForosContainer">
+      <h2>💬 Foros del Curso</h2>
+      <div id="courseForosTabs" style="display:flex;gap:0.5rem;margin-bottom:1rem;"></div>
+      <div id="courseForosContent"></div>
+    </div>
+
+    <div class="card" id="courseTutorContainer">
+      <h2>🤖 Tutor Virtual IA</h2>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">Pregunta sobre el contenido del curso al asistente de astronomía.</p>
+      <div class="chat-box" id="tutorChatBox" style="height:250px;">
+        <div class="chat-msg bot">🔭 ¡Hola! Soy tu tutor virtual. Pregúntame sobre astronomía.</div>
+      </div>
+      <div style="display:flex;gap:0.5rem;">
+        <input class="form-input" type="text" id="tutorQuestion" placeholder="Ej: ¿Qué es una estrella binaria?" style="flex:1;">
+        <button class="btn btn-primary" id="tutorAskBtn">Preguntar</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;">
+        <button class="suggest-btn tutor-suggest" data-q="¿Qué aprendí en este módulo?">📖 Resumen</button>
+        <button class="suggest-btn tutor-suggest" data-q="Dame un ejemplo práctico de este tema">💡 Ejemplo</button>
+        <button class="suggest-btn tutor-suggest" data-q="¿Qué debo repasar para el examen?">📝 Repaso</button>
+      </div>
+    </div>
   </div>
 </div>
 

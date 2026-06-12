@@ -15,7 +15,9 @@
     efemerides: [...DATA.efemerides],
     currentEditContext: null,
     factIndex: 0,
-    efemerideIndex: 0
+    efemerideIndex: 0,
+    notifications: [],
+    foroPosts: {}
   };
 
   const ADMIN_CREDS = [
@@ -60,7 +62,9 @@
         visitas: APP.state.visitas,
         gallery: APP.state.gallery,
         facts: APP.state.facts,
-        efemerides: APP.state.efemerides
+        efemerides: APP.state.efemerides,
+        notifications: APP.state.notifications,
+        foroPosts: APP.state.foroPosts
       }));
     } catch (e) { /* quota exceeded, ignore */ }
   }
@@ -77,8 +81,231 @@
         if (data.gallery) APP.state.gallery = data.gallery;
         if (data.facts) APP.state.facts = data.facts;
         if (data.efemerides) APP.state.efemerides = data.efemerides;
+        if (data.notifications) APP.state.notifications = data.notifications;
+        if (data.foroPosts) APP.state.foroPosts = data.foroPosts;
       }
     } catch (e) { /* ignore */ }
+  }
+
+  // ==================== NOTIFICATIONS ====================
+  function addNotification(icon, text) {
+    APP.state.notifications.unshift({
+      icon,
+      text,
+      time: new Date().toLocaleString('es-VE'),
+      read: false,
+      id: Date.now() + Math.random()
+    });
+    if (APP.state.notifications.length > 50) APP.state.notifications.pop();
+    saveState();
+    renderNotificationBadge();
+  }
+
+  function getUnreadNotifCount() {
+    return APP.state.notifications.filter(n => !n.read).length;
+  }
+
+  function markAllNotifRead() {
+    APP.state.notifications.forEach(n => n.read = true);
+    saveState();
+    renderNotificationBadge();
+    renderNotificationList();
+  }
+
+  function renderNotificationBadge() {
+    const badge = $('notificationBadge');
+    const count = getUnreadNotifCount();
+    if (count > 0) {
+      badge.textContent = count;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function renderNotificationList() {
+    const list = $('notificationList');
+    if (!list) return;
+    if (!APP.state.notifications.length) {
+      list.innerHTML = '<div style="padding:1rem;color:var(--text-secondary);font-size:0.85rem;">Sin notificaciones</div>';
+      return;
+    }
+    list.innerHTML = APP.state.notifications.map(n => `
+      <div class="notif-item${n.read ? '' : ' unread'}" data-notif-id="${n.id}">
+        <span class="notif-icon">${n.icon}</span>
+        <div class="notif-body">
+          <div class="notif-text">${n.text}</div>
+          <div class="notif-time">${n.time}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function initNotifications() {
+    renderNotificationBadge();
+    renderNotificationList();
+
+    $('notificationBell').addEventListener('click', (e) => {
+      e.stopPropagation();
+      $('notificationDropdown').classList.toggle('open');
+    });
+
+    $('markAllNotifRead').addEventListener('click', () => {
+      markAllNotifRead();
+    });
+
+    document.addEventListener('click', () => {
+      $('notificationDropdown')?.classList.remove('open');
+    });
+
+    $('notificationList').addEventListener('click', (e) => {
+      const item = e.target.closest('.notif-item');
+      if (item) {
+        const id = item.dataset.notifId;
+        const notif = APP.state.notifications.find(n => n.id == id);
+        if (notif) {
+          notif.read = true;
+          saveState();
+          renderNotificationBadge();
+          renderNotificationList();
+        }
+      }
+    });
+  }
+
+  // ==================== FOROS ====================
+  function getForoKey(courseId, foroType) {
+    return courseId + '_' + foroType;
+  }
+
+  function getForoPosts(courseId, foroType) {
+    const key = getForoKey(courseId, foroType);
+    return APP.state.foroPosts[key] || [];
+  }
+
+  function addForoPost(courseId, foroType, autor, texto) {
+    const key = getForoKey(courseId, foroType);
+    if (!APP.state.foroPosts[key]) APP.state.foroPosts[key] = [];
+    APP.state.foroPosts[key].push({
+      autor,
+      texto,
+      fecha: new Date().toLocaleString('es-VE'),
+      respuestas: []
+    });
+    saveState();
+  }
+
+  function addForoReply(courseId, foroType, postIdx, autor, texto) {
+    const key = getForoKey(courseId, foroType);
+    const posts = APP.state.foroPosts[key];
+    if (!posts || !posts[postIdx]) return;
+    posts[postIdx].respuestas.push({
+      autor,
+      texto,
+      fecha: new Date().toLocaleString('es-VE')
+    });
+    saveState();
+  }
+
+  function renderForo(courseId, foroType, containerId) {
+    const curso = DATA.cursosVirtuales.find(c => c.id === courseId);
+    if (!curso || !curso.foros) return;
+    const foroData = curso.foros[foroType];
+    if (!foroData) return;
+
+    const container = $(containerId);
+    if (!container) return;
+
+    const currentStudent = localStorage.getItem('aulaStudent') || 'Anónimo';
+    const posts = getForoPosts(courseId, foroType);
+
+    let html = `<div style="margin-bottom:1rem;">
+      <h3 style="font-size:1rem;">${foroData.titulo}</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">${foroData.desc}</p>
+    </div>`;
+
+    if (posts.length === 0) {
+      html += '<div class="foro-empty">💬 Aún no hay publicaciones. ¡Sé el primero en preguntar!</div>';
+    } else {
+      html += posts.map((post, idx) => `
+        <div class="foro-post">
+          <div class="foro-post-header">
+            <span class="foro-post-author">${post.autor}</span>
+            <span class="foro-post-date">${post.fecha}</span>
+          </div>
+          <div class="foro-post-text">${post.texto}</div>
+          ${post.respuestas.map(r => `
+            <div class="foro-post-reply">
+              <span class="reply-author">${r.autor}</span>: ${r.texto}
+              <span style="float:right;font-size:0.7rem;color:var(--text-secondary);">${r.fecha}</span>
+            </div>
+          `).join('')}
+          <div style="margin-top:0.5rem;">
+            <button class="btn btn-xs btn-secondary foro-reply-btn" data-course="${courseId}" data-foro="${foroType}" data-idx="${idx}">💬 Responder</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    html += `
+      <div class="foro-new-post-area">
+        <strong style="font-size:0.9rem;">Nueva publicación</strong>
+        <textarea class="form-input" id="foroNewPostText_${courseId}_${foroType}" rows="2" placeholder="Escribe tu mensaje..."></textarea>
+        <button class="btn btn-sm btn-primary foro-new-post-btn" data-course="${courseId}" data-foro="${foroType}">Publicar</button>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  }
+
+  // ==================== TUTOR IA (Aula Virtual) ====================
+  function initTutorIA() {
+    $('tutorAskBtn')?.addEventListener('click', askTutor);
+    $('tutorQuestion')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') askTutor();
+    });
+    document.querySelectorAll('.tutor-suggest').forEach(btn => {
+      btn.addEventListener('click', () => {
+        $('tutorQuestion').value = btn.dataset.q;
+        askTutor();
+      });
+    });
+  }
+
+  async function askTutor() {
+    const input = $('tutorQuestion');
+    const q = input.value.trim();
+    if (!q) return;
+
+    const chatBox = $('tutorChatBox');
+    const userDiv = document.createElement('div');
+    userDiv.className = 'chat-msg user';
+    userDiv.textContent = q;
+    chatBox.appendChild(userDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    const thinkDiv = document.createElement('div');
+    thinkDiv.className = 'chat-msg bot';
+    thinkDiv.textContent = '🤔 Pensando...';
+    chatBox.appendChild(thinkDiv);
+
+    try {
+      const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent('Eres tutor de astronomía. Responde en español, claro y educativo, como si enseñaras a un estudiante. Pregunta: ' + q)}`);
+      const txt = await res.text();
+      thinkDiv.remove();
+      const botDiv = document.createElement('div');
+      botDiv.className = 'chat-msg bot';
+      botDiv.textContent = txt;
+      chatBox.appendChild(botDiv);
+    } catch (e) {
+      thinkDiv.remove();
+      const errDiv = document.createElement('div');
+      errDiv.className = 'chat-msg bot';
+      errDiv.textContent = '⚠️ Error al consultar la IA. Intenta de nuevo.';
+      chatBox.appendChild(errDiv);
+    }
+    input.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
 
   // ==================== VISITAS ====================
@@ -2002,12 +2229,19 @@
     const coursesContainer = $('coursesContainer');
     const courseDetailView = $('courseDetailView');
     const courseDetailContent = $('courseDetailContent');
+    const courseGeniallyContainer = $('courseGeniallyContainer');
+    const courseForosContainer = $('courseForosContainer');
+    const courseForosTabs = $('courseForosTabs');
+    const courseForosContent = $('courseForosContent');
+    const courseTutorContainer = $('courseTutorContainer');
     const studentDashboard = $('studentDashboard');
     const studentLoginCard = $('studentLoginCard');
     const studentProgress = $('studentProgress');
 
     let currentStudent = null;
     let completedLessons = {};
+    let currentCourseId = null;
+    let currentForoType = 'anuncios';
 
     function loadStudent() {
       try {
@@ -2060,7 +2294,6 @@
         </div>`;
       });
       html += '</div>';
-      html += '<div style="margin-top:2rem;text-align:center;"><a href="https://campusvirtual.fundacite-caracas.com" target="_blank" class="btn btn-primary" rel="noopener">🌐 Ir al Campus Virtual</a></div>';
       coursesContainer.innerHTML = html;
       updateUI();
 
@@ -2072,9 +2305,11 @@
     function renderCourseDetail(courseId) {
       const curso = DATA.cursosVirtuales.find(c => c.id === courseId);
       if (!curso) return renderCourses();
+      currentCourseId = courseId;
       coursesContainer.style.display = 'none';
       courseDetailView.style.display = 'block';
 
+      // Modules
       let html = `<h2 style="margin-bottom:0.5rem;">${curso.titulo}</h2>
         <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">👨‍🏫 ${curso.profesor} · ${curso.modulos.reduce((s,m) => s + m.lecciones.length, 0)} lecciones</p>`;
 
@@ -2106,6 +2341,100 @@
           playLeccion(item.dataset.course, item.dataset.titulo);
         });
       });
+
+      // Genially
+      if (curso.genially) {
+        courseGeniallyContainer.style.display = 'block';
+        courseGeniallyContainer.innerHTML = `
+          <h3>🗺️ Ruta de Aprendizaje</h3>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.75rem;">Explora el plan del curso de forma interactiva.</p>
+          <div class="genially-container">
+            <iframe src="${curso.genially}" allowfullscreen="allowfullscreen" loading="lazy"></iframe>
+          </div>
+        `;
+      } else {
+        courseGeniallyContainer.style.display = 'none';
+      }
+
+      // Foros
+      if (curso.foros) {
+        courseForosContainer.style.display = 'block';
+        const foroTypes = Object.keys(curso.foros);
+        courseForosTabs.innerHTML = foroTypes.map(t => `
+          <button class="foro-tab-btn${t === currentForoType ? ' active' : ''}" data-foro-type="${t}">${curso.foros[t].titulo}</button>
+        `).join('');
+        renderCurrentForo();
+
+        courseForosTabs.querySelectorAll('.foro-tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            currentForoType = btn.dataset.foroType;
+            courseForosTabs.querySelectorAll('.foro-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCurrentForo();
+          });
+        });
+      } else {
+        courseForosContainer.style.display = 'none';
+      }
+
+      // Tutor IA
+      courseTutorContainer.style.display = 'block';
+      const tutorChatBox = $('tutorChatBox');
+      if (tutorChatBox) {
+        tutorChatBox.innerHTML = `
+          <div class="chat-msg bot">🔭 ¡Hola! Soy tu tutor virtual del curso <strong>${curso.titulo}</strong>. Pregúntame sobre cualquier tema de astronomía.</div>
+        `;
+      }
+    }
+
+    function renderCurrentForo() {
+      const curso = DATA.cursosVirtuales.find(c => c.id === currentCourseId);
+      if (!curso || !curso.foros || !curso.foros[currentForoType]) return;
+      const foroData = curso.foros[currentForoType];
+      const foroContentId = 'courseForosContent';
+      const container = $(foroContentId);
+      if (!container) return;
+
+      const currentStudent = localStorage.getItem('aulaStudent') || 'Anónimo';
+      const posts = getForoPosts(currentCourseId, currentForoType);
+
+      let html = `<div style="margin-bottom:1rem;">
+        <h3 style="font-size:1rem;">${foroData.titulo}</h3>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">${foroData.desc}</p>
+      </div>`;
+
+      if (posts.length === 0) {
+        html += '<div class="foro-empty">💬 Aún no hay publicaciones. ¡Sé el primero en preguntar!</div>';
+      } else {
+        html += posts.map((post, idx) => `
+          <div class="foro-post">
+            <div class="foro-post-header">
+              <span class="foro-post-author">${post.autor}</span>
+              <span class="foro-post-date">${post.fecha}</span>
+            </div>
+            <div class="foro-post-text">${post.texto}</div>
+            ${post.respuestas.map(r => `
+              <div class="foro-post-reply">
+                <span class="reply-author">${r.autor}</span>: ${r.texto}
+                <span style="float:right;font-size:0.7rem;color:var(--text-secondary);">${r.fecha}</span>
+              </div>
+            `).join('')}
+            <div style="margin-top:0.5rem;">
+              <button class="btn btn-xs btn-secondary foro-reply-btn" data-course="${currentCourseId}" data-foro="${currentForoType}" data-idx="${idx}">💬 Responder</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      html += `
+        <div class="foro-new-post-area">
+          <strong style="font-size:0.9rem;">Nueva publicación</strong>
+          <textarea class="form-input" id="foroNewPostText_${currentCourseId}_${currentForoType}" rows="2" placeholder="Escribe tu mensaje..."></textarea>
+          <button class="btn btn-sm btn-primary foro-new-post-btn" data-course="${currentCourseId}" data-foro="${currentForoType}">Publicar</button>
+        </div>
+      `;
+
+      container.innerHTML = html;
     }
 
     function playLeccion(courseId, titulo) {
@@ -2141,6 +2470,7 @@
         this.textContent = '✅ Completada';
         renderCourseDetail(courseId);
         updateUI();
+        addNotification('✅', `Completaste "${leccion.titulo}" en ${curso.titulo}`);
         showToast('✅ Lección marcada como completada', 'success');
       });
 
@@ -2153,6 +2483,43 @@
       });
     }
 
+    // Foro event delegation
+    document.addEventListener('click', function(e) {
+      const replyBtn = e.target.closest('.foro-reply-btn');
+      if (replyBtn) {
+        const course = replyBtn.dataset.course;
+        const foro = replyBtn.dataset.foro;
+        const idx = parseInt(replyBtn.dataset.idx);
+        const autor = localStorage.getItem('aulaStudent') || 'Anónimo';
+        const replyText = prompt('Escribe tu respuesta:');
+        if (replyText && replyText.trim()) {
+          addForoReply(course, foro, idx, autor, replyText.trim());
+          if (course === currentCourseId && foro === currentForoType) {
+            renderCurrentForo();
+          }
+        }
+        return;
+      }
+
+      const postBtn = e.target.closest('.foro-new-post-btn');
+      if (postBtn) {
+        const course = postBtn.dataset.course;
+        const foro = postBtn.dataset.foro;
+        const textarea = document.getElementById(`foroNewPostText_${course}_${foro}`);
+        const texto = textarea ? textarea.value.trim() : '';
+        if (!texto) { showToast('⚠️ Escribe un mensaje', 'warning'); return; }
+        const autor = localStorage.getItem('aulaStudent') || 'Anónimo';
+        addForoPost(course, foro, autor, texto);
+        if (textarea) textarea.value = '';
+        if (course === currentCourseId && foro === currentForoType) {
+          renderCurrentForo();
+        }
+        addNotification('💬', `${autor} publicó en el foro de ${DATA.cursosVirtuales.find(c => c.id === course)?.titulo || course}`);
+        showToast('✅ Publicación creada', 'success');
+        return;
+      }
+    });
+
     enterAulaBtn.addEventListener('click', () => {
       const name = studentNameInput.value.trim();
       if (!name) { showToast('⚠️ Ingresa tu nombre', 'warning'); return; }
@@ -2160,6 +2527,7 @@
       saveStudent();
       updateUI();
       renderCourses();
+      addNotification('👋', `${name} inició sesión en el Aula Virtual`);
       showToast(`👋 Bienvenido, ${name}!`, 'success');
     });
 
@@ -2176,11 +2544,17 @@
       showToast('👋 Sesión cerrada', 'info');
     });
 
-    backToCoursesBtn.addEventListener('click', renderCourses);
+    backToCoursesBtn.addEventListener('click', function() {
+      renderCourses();
+      courseGeniallyContainer.style.display = 'none';
+      courseForosContainer.style.display = 'none';
+      courseTutorContainer.style.display = 'none';
+    });
 
     loadStudent();
     renderCourses();
     updateUI();
+    initTutorIA();
   }
 
   // ==================== KEYBOARD SHORTCUTS ====================
@@ -2279,6 +2653,7 @@
     initGame();
     initConstellations();
     initAulaVirtual();
+    initNotifications();
     initSpaceHistory();
     initRandomSpace();
     initFacts();
