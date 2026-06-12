@@ -79,7 +79,7 @@
     const users = await getUsers();
     if (users.find(u => u.username === username)) return { error: 'El usuario ya existe' };
     if (users.find(u => u.email === email)) return { error: 'El correo ya está registrado' };
-    const newUser = { email, username, password, registeredAt: new Date().toISOString() };
+    const newUser = { email, username, password, registeredAt: new Date().toISOString(), progress: { trivia: [], game: [] } };
     users.push(newUser);
     await saveUsers(users);
     return { success: true, user: newUser };
@@ -115,6 +115,21 @@
     updateAdminUI();
     updateUserBtn();
     showToast('👋 Sesión cerrada', 'info');
+  }
+
+  async function getUserData(username) {
+    const users = await getUsers();
+    return users.find(u => u.username === username) || null;
+  }
+
+  async function saveUserProgress(username, type, score) {
+    const users = await getUsers();
+    const user = users.find(u => u.username === username);
+    if (!user) return;
+    if (!user.progress) user.progress = { trivia: [], game: [] };
+    if (!user.progress[type]) user.progress[type] = [];
+    user.progress[type].push({ puntaje: score, fecha: new Date().toISOString() });
+    await saveUsers(users);
   }
 
   // ==================== UTILITIES ====================
@@ -497,13 +512,10 @@
     }
 
     // User button in header
-    $('userBtn').addEventListener('click', () => {
+    $('userBtn').addEventListener('click', async () => {
       const user = getCurrentUser();
       if (user) {
-        if (confirm('¿Cerrar sesión?')) {
-          logoutUser();
-          updateUserBtn();
-        }
+        await showProfileModal(user);
       } else {
         openAuth();
       }
@@ -512,6 +524,17 @@
     // Cancel buttons
     $('authCancelBtn').addEventListener('click', () => authModal.classList.remove('open'));
     $('authRegCancelBtn').addEventListener('click', () => authModal.classList.remove('open'));
+
+    // Profile modal
+    $('closeProfileBtn').addEventListener('click', () => $('profileModal').classList.remove('open'));
+    $('profileLogoutBtn').addEventListener('click', () => {
+      $('profileModal').classList.remove('open');
+      logoutUser();
+      updateUserBtn();
+    });
+    $('profileModal').addEventListener('click', e => {
+      if (e.target === $('profileModal')) $('profileModal').classList.remove('open');
+    });
 
     // Login
     $('authLoginBtn').addEventListener('click', async () => {
@@ -1805,6 +1828,11 @@
     APP.state.ranking = APP.state.ranking.slice(0, 10);
     saveState();
     renderRanking();
+    // Save to GitHub if logged in
+    const user = getCurrentUser();
+    if (user && !user.isAdmin) {
+      saveUserProgress(user.username, 'trivia', puntaje);
+    }
   }
 
   function renderRanking() {
@@ -2069,8 +2097,51 @@
                       vy: e.vy + (Math.random() - 0.5) * 2,
                       size: e.size * 0.6, color: '#ffaa44', hp: 1
                     });
-                  }
-                }
+    }
+  }
+
+  async function showProfileModal(user) {
+    const userData = await getUserData(user.username);
+    const body = $('profileModalBody');
+    const trivia = userData?.progress?.trivia || [];
+    const game = userData?.progress?.game || [];
+    const bestTrivia = trivia.length ? Math.max(...trivia.map(t => t.puntaje)) : 0;
+    const totalTrivia = trivia.length;
+    const bestGame = game.length ? Math.max(...game.map(g => g.puntaje)) : 0;
+    const totalGame = game.length;
+    body.innerHTML = `
+      <div style="text-align:center;margin:1rem 0;">
+        <div style="font-size:2rem;">👤</div>
+        <strong style="font-size:1.1rem;">${userData?.username || user.username}</strong>
+        <br><span style="font-size:0.8rem;color:var(--text-secondary);">${userData?.email || ''}</span>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:1rem;">
+        <h4 style="margin:0 0 0.5rem;">📊 Mis Puntajes</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          <div style="background:var(--bg-card);padding:0.8rem;border-radius:var(--radius);text-align:center;">
+            <div style="font-size:0.75rem;color:var(--text-secondary);">🏆 Trivia</div>
+            <div style="font-size:1.3rem;font-weight:700;">${bestTrivia} pts</div>
+            <div style="font-size:0.7rem;color:var(--text-secondary);">${totalTrivia} partidas</div>
+          </div>
+          <div style="background:var(--bg-card);padding:0.8rem;border-radius:var(--radius);text-align:center;">
+            <div style="font-size:0.75rem;color:var(--text-secondary);">🚀 Juego</div>
+            <div style="font-size:1.3rem;font-weight:700;">${bestGame} pts</div>
+            <div style="font-size:0.7rem;color:var(--text-secondary);">${totalGame} partidas</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+        <details>
+          <summary style="cursor:pointer;font-size:0.85rem;color:var(--accent);">📜 Historial completo</summary>
+          <div style="margin-top:0.5rem;max-height:150px;overflow-y:auto;">
+            ${trivia.length ? trivia.map(t => `<div style="font-size:0.8rem;padding:0.2rem 0;">🏆 Trivia: ${t.puntaje} pts (${new Date(t.fecha).toLocaleDateString('es-VE')})</div>`).join('') : ''}
+            ${game.length ? game.map(g => `<div style="font-size:0.8rem;padding:0.2rem 0;">🚀 Juego: ${g.puntaje} pts (${new Date(g.fecha).toLocaleDateString('es-VE')})</div>`).join('') : ''}
+            ${!trivia.length && !game.length ? '<div style="font-size:0.8rem;color:var(--text-secondary);">Aún no has jugado</div>' : ''}
+          </div>
+        </details>
+      </div>`;
+    $('profileModal').classList.add('open');
+  }
               } else {
                 score += 40;
               }
@@ -2158,6 +2229,8 @@
         APP.state.gameRanking = APP.state.gameRanking.slice(0, 10);
         saveState();
         renderGameRanking();
+        const cur = getCurrentUser();
+        if (cur && !cur.isAdmin) saveUserProgress(cur.username, 'game', score);
       }
     }
 
@@ -2171,6 +2244,8 @@
       $('gameNameInput').style.display = 'none';
       $('gameOverOverlay').querySelector('h2').textContent = '💥 GAME OVER';
       showToast(`🏆 ${name} guardado en el ranking!`, 'success');
+      const cur = getCurrentUser();
+      if (cur && !cur.isAdmin) saveUserProgress(cur.username, 'game', finalScore);
     }
 
     function drawAsteroid(a) {
